@@ -1,0 +1,22 @@
+Unknown function 'Elixir.Runlet.Fmt.BitString':'__impl__'/1
+Unknown function 'Elixir.Runlet.Fmt.Float':'__impl__'/1
+Unknown function 'Elixir.Runlet.Fmt.Function':'__impl__'/1
+Unknown function 'Elixir.Runlet.Fmt.Integer':'__impl__'/1
+Unknown function 'Elixir.Runlet.Fmt.List':'__impl__'/1
+Unknown function 'Elixir.Runlet.Fmt.Map':'__impl__'/1
+Unknown function 'Elixir.Runlet.Fmt.Port':'__impl__'/1
+Unknown function 'Elixir.Runlet.Fmt.Reference':'__impl__'/1
+Unknown function 'Elixir.Runlet.Fmt.Tuple':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.Atom':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.BitString':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.Float':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.Function':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.Integer':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.List':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.Map':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.PID':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.Port':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.Reference':'__impl__'/1
+Unknown function 'Elixir.Runlet.Rate.Tuple':'__impl__'/1
+Unknown function http_uri:encode/1
+Function yyrev/2 will never be called
