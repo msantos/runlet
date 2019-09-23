@@ -6,7 +6,7 @@ monitoring systems.
 
 `runlets` are light weight processes connecting to an event source
 similar to a shell pipeline. The output of a runlet can be temporarily
-stopped or terminated.
+stopped or terminated using job control commands.
 
 An event source could be a monitoring system like
 [Riemann](http://riemann.io/) or the standard output of a containerized
@@ -19,6 +19,8 @@ events before being outputted.
 
 Add runlet to your list of dependencies in `mix.exs`:
 
-    def deps do
-      [{:runlet, git: "https://github.com/msantos/runlet.git"}]
-    end
+```elixir
+def deps do
+  [{:runlet, git: "https://github.com/msantos/runlet.git"}]
+end
+```

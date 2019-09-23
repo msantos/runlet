@@ -9,7 +9,9 @@ defmodule Runlet.Mixfile do
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      description: "Event stream query and flow control",
+      package: package(),
+      description:
+        "Job command language to query and flow control event streams",
       dialyzer: [
         plt_add_deps: :transitive,
         ignore_warnings: "dialyzer.ignore-warnings",
@@ -44,6 +46,14 @@ defmodule Runlet.Mixfile do
       {:vex, "~> 0.6.0"},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false}
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Michael Santos"],
+      licenses: ["ISC"],
+      links: %{github: "https://github.com/msantos/runlet"}
     ]
   end
 end
