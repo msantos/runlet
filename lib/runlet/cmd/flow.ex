@@ -5,28 +5,14 @@ defmodule Runlet.Cmd.Flow do
             seconds: 10,
             events: 0,
             dropped: 0,
-            max: 1000,
             ts: 0
 
   @doc """
   Drop events that exceed a rate in count per seconds.
   """
   @spec exec(Enumerable.t(), pos_integer, pos_integer) :: Enumerable.t()
-  def exec(stream, flow_count, flow_seconds) do
-    exec(stream, flow_count, flow_seconds, 1000)
-  end
-
-  @doc """
-  Drop events that exceed a rate in count per seconds.
-
-  The flow_max argument specifies a high water mark for the number
-  of queued messages. If the maximum is exceeded, all queued messages
-  are dropped.
-  """
-  @spec exec(Enumerable.t(), pos_integer, pos_integer, pos_integer) ::
-          Enumerable.t()
-  def exec(stream, flow_count, flow_seconds, flow_max)
-      when flow_count > 0 and flow_seconds > 0 and flow_max > 0 do
+  def exec(stream, flow_count, flow_seconds)
+      when flow_count > 0 and flow_seconds > 0 do
     name = inspect(:erlang.make_ref())
 
     Stream.transform(
@@ -36,7 +22,6 @@ defmodule Runlet.Cmd.Flow do
           Runlet.Cmd.Flow,
           count: flow_count,
           seconds: flow_seconds,
-          max: flow_max,
           ts: now()
         )
       end,
@@ -50,7 +35,6 @@ defmodule Runlet.Cmd.Flow do
           seconds: seconds0,
           events: events0,
           dropped: dropped,
-          max: max,
           ts: ts
         } = state ->
           {limit, scale} =
@@ -66,8 +50,6 @@ defmodule Runlet.Cmd.Flow do
               0 ->
                 {count0, seconds0}
             end
-
-          flushed = pending_events(max)
 
           events = events0 + 1
 
@@ -93,7 +75,7 @@ defmodule Runlet.Cmd.Flow do
                  count: limit,
                  seconds: scale,
                  events: events,
-                 dropped: dropped + flushed
+                 dropped: dropped
                )}
 
             {:error, _} ->
@@ -103,7 +85,7 @@ defmodule Runlet.Cmd.Flow do
                  count: limit,
                  seconds: scale,
                  events: events,
-                 dropped: dropped + 1 + flushed
+                 dropped: dropped + 1
                )}
           end
       end,
@@ -122,26 +104,6 @@ defmodule Runlet.Cmd.Flow do
     case now() - ts do
       x when x > 0 -> x
       _ -> 1
-    end
-  end
-
-  defp pending_events(n) do
-    case Process.info(self(), :message_queue_len) do
-      {:message_queue_len, x} when x < n ->
-        0
-
-      {:message_queue_len, _} ->
-        flush_queue()
-    end
-  end
-
-  defp flush_queue(), do: flush_queue(0)
-
-  defp flush_queue(x) do
-    receive do
-      _ -> flush_queue(x + 1)
-    after
-      0 -> x
     end
   end
 end
