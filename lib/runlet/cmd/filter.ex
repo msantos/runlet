@@ -14,7 +14,7 @@ defmodule Runlet.Cmd.Filter do
 
       query 'service ~= "foo" and not description ~= "bar"'
   """
-  @spec exec(Enumerable.t(), binary) :: Enumerable.t()
+  @spec exec(Enumerable.t(), String.t()) :: Enumerable.t()
   def exec(stream, match) do
     startfun = fn -> Regex.compile!(match, [:caseless]) end
 

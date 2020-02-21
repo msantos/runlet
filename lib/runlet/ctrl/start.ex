@@ -9,7 +9,7 @@ defmodule Runlet.Ctrl.Start do
   @doc """
   Start multiple processes.
   """
-  @spec exec(Runlet.t(), binary, binary) :: Enumerable.t()
+  @spec exec(Runlet.t(), String.t(), String.t()) :: Enumerable.t()
   def exec(env, pid, uid) when is_binary(pid) do
     pid
     |> String.split()
@@ -20,7 +20,7 @@ defmodule Runlet.Ctrl.Start do
   @doc """
   Start a process for another user.
   """
-  @spec exec(Runlet.t(), integer | float, binary) :: Enumerable.t()
+  @spec exec(Runlet.t(), integer | float, String.t()) :: Enumerable.t()
   def exec(_env, pid, uid) when is_integer(pid) do
     result = Runlet.Process.start(uid, pid)
 

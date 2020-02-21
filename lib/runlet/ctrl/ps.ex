@@ -10,7 +10,7 @@ defmodule Runlet.Ctrl.Ps do
   @doc """
   List a user's running processes.
   """
-  @spec exec(Runlet.t(), binary) :: Enumerable.t()
+  @spec exec(Runlet.t(), String.t()) :: Enumerable.t()
   def exec(env, "-a") do
     Runlet.Process.table()
     |> Enum.map(fn uid -> exec(env, uid) end)

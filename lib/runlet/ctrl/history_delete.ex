@@ -6,7 +6,7 @@ defmodule Runlet.Ctrl.HistoryDelete do
 
     args: "1 2 4 6"
   """
-  @spec exec(Runlet.t(), binary | integer) :: Enumerable.t()
+  @spec exec(Runlet.t(), String.t() | integer) :: Enumerable.t()
   def exec(%Runlet{uid: uid}, index) when is_binary(index) do
     offset =
       index

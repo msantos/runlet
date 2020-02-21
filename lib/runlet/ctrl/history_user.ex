@@ -4,7 +4,7 @@ defmodule Runlet.Ctrl.HistoryUser do
   @doc """
   View another user's history.
   """
-  @spec exec(Runlet.t(), binary) :: Enumerable.t()
+  @spec exec(Runlet.t(), String.t()) :: Enumerable.t()
   def exec(%Runlet{} = env, uid) do
     [Runlet.State.path(), "#{Runlet.State.encode(uid)}*"]
     |> Path.join()
@@ -23,7 +23,7 @@ defmodule Runlet.Ctrl.HistoryUser do
   @doc """
   Run a command from another user's history.
   """
-  @spec exec(Runlet.t(), binary, non_neg_integer) :: Enumerable.t()
+  @spec exec(Runlet.t(), String.t(), non_neg_integer) :: Enumerable.t()
   def exec(env, uid, index) do
     case [Runlet.State.path(), "#{Runlet.State.encode(uid)}*"]
          |> Path.join()

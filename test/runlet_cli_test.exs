@@ -5,7 +5,8 @@ defmodule RunletCLITest do
   test "parser: string used as command" do
     assert {:ok, [{:string, 1, 'a string'}], 1} = Runlet.CLI.lex("\"a string\"")
 
-    assert {:error, "syntax error before: \"a string\""} = Runlet.CLI.parse("\"a string\"")
+    assert {:error, "syntax error before: \"a string\""} =
+             Runlet.CLI.parse("\"a string\"")
   end
 
   test "parse: integer used as command" do
@@ -19,12 +20,18 @@ defmodule RunletCLITest do
     assert {:ok, [{"help", ["foo"]}]} = Runlet.CLI.parse(~S(help "foo"))
 
     # command pid string
-    assert {:ok, [{"signal", [1, "TERM"]}]} = Runlet.CLI.parse(~S(signal 1 "TERM"))
-    assert {:ok, [{"signal", [1.0, "TERM"]}]} = Runlet.CLI.parse(~S(signal 1.0 "TERM"))
+    assert {:ok, [{"signal", [1, "TERM"]}]} =
+             Runlet.CLI.parse(~S(signal 1 "TERM"))
+
+    assert {:ok, [{"signal", [1.0, "TERM"]}]} =
+             Runlet.CLI.parse(~S(signal 1.0 "TERM"))
 
     # command pid integer integer
-    assert {:ok, [{"reflow", [1, 10, 20]}]} = Runlet.CLI.parse(~S(reflow 1 10 20))
-    assert {:ok, [{"reflow", [1.1, 10, 20]}]} = Runlet.CLI.parse(~S(reflow 1.1 10 20))
+    assert {:ok, [{"reflow", [1, 10, 20]}]} =
+             Runlet.CLI.parse(~S(reflow 1 10 20))
+
+    assert {:ok, [{"reflow", [1.1, 10, 20]}]} =
+             Runlet.CLI.parse(~S(reflow 1.1 10 20))
 
     assert {:ok, [{"reflow", ["1 1.1 2.2", 10, 20]}]} =
              Runlet.CLI.parse(~S(reflow "1 1.1 2.2" 10 20))

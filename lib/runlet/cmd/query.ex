@@ -79,13 +79,13 @@ defmodule Runlet.Cmd.Query do
 
     https://github.com/riemann/riemann/blob/master/resources/query.g4
   """
-  @spec exec(binary) :: Enumerable.t()
+  @spec exec(String.t()) :: Enumerable.t()
   def exec(q) do
     exec(q, riemann_event())
   end
 
   @doc false
-  @spec exec(binary, [atom]) :: Enumerable.t()
+  @spec exec(String.t(), [atom]) :: Enumerable.t()
   def exec(q, structs) do
     cfg = %Runlet.Cmd.Query{
       host: riemann_host(),

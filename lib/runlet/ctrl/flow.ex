@@ -19,7 +19,7 @@ defmodule Runlet.Ctrl.Flow do
     # pids 1234, 2345, 123456
     args: "1234 2345 12346" 10 2
   """
-  @spec exec(Runlet.t(), integer | float | binary, pos_integer, pos_integer) ::
+  @spec exec(Runlet.t(), integer | float | String.t(), pos_integer, pos_integer) ::
           Enumerable.t()
   def exec(%Runlet{uid: uid} = env, pid, count, minutes) do
     exec(env, pid, count, minutes, uid)
@@ -33,10 +33,10 @@ defmodule Runlet.Ctrl.Flow do
   """
   @spec exec(
           Runlet.t(),
-          integer | float | binary,
+          integer | float | String.t(),
           pos_integer,
           pos_integer,
-          binary
+          String.t()
         ) ::
           Enumerable.t()
   def exec(env, pid, count, minutes, uid) when is_binary(pid) do

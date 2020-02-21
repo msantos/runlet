@@ -27,7 +27,7 @@ defmodule Runlet.Ctrl.History do
 
     args: "10 11 34"
   """
-  @spec exec(Runlet.t(), non_neg_integer | binary) :: Enumerable.t()
+  @spec exec(Runlet.t(), non_neg_integer | String.t()) :: Enumerable.t()
   def exec(%Runlet{} = env, index) when is_binary(index) do
     index
     |> String.split()
