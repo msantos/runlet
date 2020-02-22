@@ -37,7 +37,7 @@ defmodule Runlet.Ctrl.Signal do
   defp to_signal(<<"alrm">>), do: "SIGALRM"
   defp to_signal(<<"cont">>), do: "SIGCONT"
   defp to_signal(<<"hup">>), do: "SIGHUP"
-  defp to_signal(<<"int">>), do: "SIGTERM"
+  defp to_signal(<<"int">>), do: "SIGINT"
   defp to_signal(<<"kill">>), do: "SIGKILL"
   defp to_signal(<<"quit">>), do: "SIGQUIT"
   defp to_signal(<<"stop">>), do: "SIGSTOP"
