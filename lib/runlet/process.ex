@@ -161,7 +161,7 @@ defmodule Runlet.Process do
   @spec kill(binary, Runlet.PID.t()) :: binary
   def kill(name, id) do
     match(name, id, fn pid, cmd ->
-      Task.Supervisor.terminate_child(Runlet.Init, pid)
+      _ = Task.Supervisor.terminate_child(Runlet.Init, pid)
       "process killed: #{cmd}"
     end)
   end

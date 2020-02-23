@@ -13,10 +13,12 @@ defmodule Runlet.Mixfile do
       description:
         "Job command language to query and flow control event streams",
       dialyzer: [
-        plt_add_deps: :transitive,
-        ignore_warnings: "dialyzer.ignore-warnings",
-        paths: [
-          "_build/dev/lib/runlet/ebin"
+        list_unused_filters: true,
+        flags: [
+          "-Wunmatched_returns",
+          :error_handling,
+          :race_conditions,
+          :underspecs
         ]
       ]
     ]
