@@ -4,7 +4,7 @@ defmodule Runlet.Ctrl.Kill do
   @doc """
   Terminate the process running an event stream.
   """
-  @spec exec(Runlet.t(), integer | float, String.t()) :: Enumerable.t()
+  @spec exec(Runlet.t(), Runlet.PID.t(), String.t()) :: Enumerable.t()
   def exec(%Runlet{uid: uid} = env, pid), do: exec(env, pid, uid)
 
   @doc """

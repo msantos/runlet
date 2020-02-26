@@ -4,7 +4,7 @@ defmodule Runlet.Ctrl.Flow do
   @doc """
   Alters the flow control for a running process to 1/minute.
   """
-  @spec exec(Runlet.t(), integer | float) :: Enumerable.t()
+  @spec exec(Runlet.t(), Runlet.PID.t()) :: Enumerable.t()
   def exec(%Runlet{uid: uid} = env, pid) do
     exec(env, pid, 1, 1, uid)
   end
@@ -19,7 +19,7 @@ defmodule Runlet.Ctrl.Flow do
     # pids 1234, 2345, 123456
     args: "1234 2345 12346" 10 2
   """
-  @spec exec(Runlet.t(), integer | float | String.t(), pos_integer, pos_integer) ::
+  @spec exec(Runlet.t(), Runlet.PID.t() | String.t(), pos_integer, pos_integer) ::
           Enumerable.t()
   def exec(%Runlet{uid: uid} = env, pid, count, minutes) do
     exec(env, pid, count, minutes, uid)
@@ -33,7 +33,7 @@ defmodule Runlet.Ctrl.Flow do
   """
   @spec exec(
           Runlet.t(),
-          integer | float | String.t(),
+          Runlet.PID.t() | String.t(),
           pos_integer,
           pos_integer,
           String.t()

@@ -4,13 +4,13 @@ defmodule Runlet.Ctrl.Signal do
   @doc """
   Sends SIGHUP to a process.
   """
-  @spec exec(Runlet.t(), String.t() | integer | float) :: Enumerable.t()
+  @spec exec(Runlet.t(), String.t() | Runlet.PID.t()) :: Enumerable.t()
   def exec(env, pid), do: exec(env, pid, "hup")
 
   @doc """
   Sends a signal to a process.
   """
-  @spec exec(Runlet.t(), String.t() | integer | float, String.t()) ::
+  @spec exec(Runlet.t(), String.t() | Runlet.PID.t(), String.t()) ::
           Enumerable.t()
   def exec(env, pid, signal) when is_binary(pid) do
     pid

@@ -101,7 +101,7 @@ defmodule Runlet.Process do
   @doc """
   Add a command to a user's process table.
   """
-  @spec add(binary, Runlet.PID.t(), binary) :: :ok | {:error, any()}
+  @spec add(binary, pid | Runlet.PID.t(), binary) :: :ok | {:error, any()}
   def add(user, pid, cmd)
       when is_binary(user) and is_binary(cmd) and is_pid(pid) do
     Runlet.State.add("process", user, pid, cmd)
@@ -110,7 +110,7 @@ defmodule Runlet.Process do
   @doc """
   Delete a command from a user's process table.
   """
-  @spec delete(binary, Runlet.PID.t()) :: :ok | {:error, any()}
+  @spec delete(binary, pid | Runlet.PID.t()) :: :ok | {:error, any()}
   def delete(name, id) do
     pid = Runlet.PID.to_pid(id)
     Runlet.State.delete("process", name, pid)

@@ -4,7 +4,7 @@ defmodule Runlet.Ctrl.Exit do
   @doc """
   Causes the event stream associated with a PID to exit.
   """
-  @spec exec(Runlet.t(), integer | float) :: Enumerable.t()
+  @spec exec(Runlet.t(), Runlet.PID.t()) :: Enumerable.t()
   def exec(%Runlet{uid: uid} = env, pid), do: exec(env, pid, uid)
 
   def exec(_env, pid, uid) do

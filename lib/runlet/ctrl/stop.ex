@@ -5,7 +5,7 @@ defmodule Runlet.Ctrl.Stop do
   Stops output from a running process. The process continues to run.
   After *timeout* minutes passes, output from the process resumes.
   """
-  @spec exec(Runlet.t(), String.t() | integer | float, pos_integer) ::
+  @spec exec(Runlet.t(), String.t() | Runlet.PID.t(), pos_integer) ::
           Enumerable.t()
   def exec(%Runlet{uid: uid} = env, pid, timeout \\ 60),
     do: exec(env, pid, timeout, uid)
@@ -13,7 +13,7 @@ defmodule Runlet.Ctrl.Stop do
   @doc """
   Stops output stream for list of processes.
   """
-  @spec exec(Runlet.t(), String.t() | integer | float, pos_integer, String.t()) ::
+  @spec exec(Runlet.t(), String.t() | Runlet.PID.t(), pos_integer, String.t()) ::
           Enumerable.t()
   def exec(env, pid, timeout, uid) when is_binary(pid) do
     pid

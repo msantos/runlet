@@ -3,7 +3,7 @@ defmodule Runlet.PID do
 
   use Bitwise
 
-  @type t :: pid | integer | float | binary
+  @type t :: integer | float
 
   @doc ~S"""
   Convert a Elixir PID to a string
@@ -55,7 +55,7 @@ defmodule Runlet.PID do
     iex> Runlet.PID.to_pid(String.to_integer(Runlet.PID.to_string(:erlang.list_to_pid('<0.1234.0>'))))
     #PID<0.1234.0>
   """
-  @spec to_pid(Runlet.PID.t()) :: pid
+  @spec to_pid(Runlet.PID.t() | pid | String.t() | charlist()) :: pid
   def to_pid(x) when is_pid(x), do: x
   def to_pid(x) when is_integer(x), do: :erlang.list_to_pid('<0.#{x}.0>')
 

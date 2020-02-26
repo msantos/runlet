@@ -177,7 +177,7 @@ defmodule Runlet.CLI do
     {:ok, [{"test", ["foo"]}, {"bar", '{'}, {"out", []}, {">", [456]}]}
   """
   @spec parse(e) ::
-          {:ok, [{String.t(), [integer | float | String.t()]}]}
+          {:ok, [{String.t(), [Runlet.PID.t() | String.t()]}]}
           | {:error, String.t()}
   def parse(command) when is_binary(command) do
     result =

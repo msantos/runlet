@@ -20,7 +20,7 @@ defmodule Runlet.Ctrl.Start do
   @doc """
   Start a process for another user.
   """
-  @spec exec(Runlet.t(), integer | float, String.t()) :: Enumerable.t()
+  @spec exec(Runlet.t(), Runlet.PID.t(), String.t()) :: Enumerable.t()
   def exec(_env, pid, uid) when is_integer(pid) do
     result = Runlet.Process.start(uid, pid)
 
