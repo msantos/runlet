@@ -39,9 +39,12 @@ defmodule Runlet.Ctrl.Signal do
   defp to_signal(<<"hup">>), do: "SIGHUP"
   defp to_signal(<<"int">>), do: "SIGINT"
   defp to_signal(<<"kill">>), do: "SIGKILL"
+  defp to_signal(<<"pwr">>), do: "SIGPWR"
   defp to_signal(<<"quit">>), do: "SIGQUIT"
   defp to_signal(<<"stop">>), do: "SIGSTOP"
   defp to_signal(<<"stp">>), do: "SIGSTOP"
   defp to_signal(<<"term">>), do: "SIGTERM"
+  defp to_signal(<<"usr1">>), do: "SIGUSR1"
+  defp to_signal(<<"usr2">>), do: "SIGUSR2"
   defp to_signal(sig) when is_binary(sig), do: sig
 end
