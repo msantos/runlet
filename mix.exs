@@ -46,8 +46,8 @@ defmodule Runlet.Mixfile do
       {:gun, "~> 1.3"},
       {:poison, "~> 3.1.0"},
       {:vex, "~> 0.6.0"},
-      {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
+      {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
