@@ -34,9 +34,7 @@ defmodule Runlet.Cmd.Limit do
                    event: %Runlet.Event.Ctrl{
                      service: "limit",
                      description:
-                       "limit reached: new events will be dropped (#{limit} events/#{
-                         seconds
-                       } seconds)",
+                       "limit reached: new events will be dropped (#{limit} events/#{seconds} seconds)",
                      host: "#{node()}"
                    },
                    query: "limit #{limit} #{seconds}"

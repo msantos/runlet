@@ -22,9 +22,6 @@ defmodule Runlet.Ctrl.Stop do
     |> Enum.map(fn t -> exec(env, t, timeout, uid) end)
   end
 
-  @doc """
-  Stops output stream for a user's process.
-  """
   def exec(_env, pid, timeout, uid) when is_integer(pid) or is_float(pid) do
     result = Runlet.Process.stop(uid, pid, timeout)
 

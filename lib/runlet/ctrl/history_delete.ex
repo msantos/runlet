@@ -2,8 +2,9 @@ defmodule Runlet.Ctrl.HistoryDelete do
   @moduledoc "Delete items from history"
 
   @doc """
-  Deletes multiple items from the history:
+  Deletes items from the history:
 
+    args: 4
     args: "1 2 4 6"
   """
   @spec exec(Runlet.t(), String.t() | integer) :: Enumerable.t()
@@ -27,11 +28,6 @@ defmodule Runlet.Ctrl.HistoryDelete do
     ]
   end
 
-  @doc """
-  Deletes an item from the history:
-
-    args: 4
-  """
   def exec(%Runlet{uid: uid}, index) when is_integer(index) do
     result = Runlet.History.delete(uid, index)
 

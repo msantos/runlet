@@ -23,8 +23,9 @@ defmodule Runlet.Ctrl.History do
   end
 
   @doc """
-  Run multiple commands from history:
+  Run commands from history:
 
+    args: 10
     args: "10 11 34"
   """
   @spec exec(Runlet.t(), non_neg_integer | String.t()) :: Enumerable.t()
@@ -34,11 +35,6 @@ defmodule Runlet.Ctrl.History do
     |> Enum.map(fn t -> exec(env, String.to_integer(t)) end)
   end
 
-  @doc """
-  Run command from history:
-
-    args: 10
-  """
   def exec(%Runlet{uid: uid, pipeline: pipeline} = env, index)
       when is_integer(index) do
     case Runlet.History.lookup(uid, index) do
