@@ -104,13 +104,14 @@ defmodule Runlet.Cmd.Query do
                        state ->
       receive do
         {:gun_sse, ^conn, ^ref, %{event_type: "message", data: data}} ->
-          case Poison.Parser.parse(data) do
-            {:ok, event} ->
-              e = service(event, structs)
-              {[%Runlet.Event{query: q, event: e}], state}
-
-            {:error, _} = error ->
+          try do
+            event = Poison.Parser.parse!(data)
+            e = service(event, structs)
+            {[%Runlet.Event{query: q, event: e}], state}
+          rescue
+            error ->
               :error_logger.error_report([error])
+              :gun.close(conn)
               :timer.sleep(retry)
               {:ok, t} = open(state)
               {[], t}
