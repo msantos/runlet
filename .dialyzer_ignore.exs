@@ -49,5 +49,5 @@
   {"lib/runlet/cmd/query.ex", :no_return, 98},
   {"lib/runlet/cmd/query.ex", :no_return, 198},
   {"lib/runlet/cmd/query.ex", :unused_fun, 233},
-  {"lib/runlet/cmd/query.ex", :unused_fun, 334}
+  {"lib/runlet/cmd/query.ex", :unused_fun, 340}
 ]

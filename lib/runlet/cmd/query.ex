@@ -239,8 +239,14 @@ defmodule Runlet.Cmd.Query do
            conn: conn
          } = state0
        ) do
+    equery =
+      query
+      |> List.to_string()
+      |> URI.encode(&URI.char_unreserved?/1)
+      |> String.to_charlist()
+
     ref =
-      :gun.get(conn, [url, :http_uri.encode(query)], [
+      :gun.get(conn, [url, equery], [
         {"accept", "text/event-stream"}
       ])
 
