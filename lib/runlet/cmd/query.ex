@@ -1,20 +1,20 @@
 defmodule Runlet.Cmd.Query do
   @moduledoc "Query a riemann server"
 
-  defstruct url: '',
-            host: '',
+  defstruct url: "",
+            host: "",
             port: 80,
-            query: '',
+            query: "",
             retry: 3_000,
             conn: nil,
             ref: nil,
             m: nil
 
   @type t :: %__MODULE__{
-          url: charlist,
-          host: charlist,
+          url: String.t(),
+          host: String.t(),
           port: non_neg_integer,
-          query: charlist,
+          query: String.t(),
           retry: non_neg_integer,
           conn: pid | nil,
           ref: reference | nil,
@@ -26,14 +26,10 @@ defmodule Runlet.Cmd.Query do
   @riemann_port "8080"
 
   defp riemann_url,
-    do:
-      Runlet.Config.get(:runlet, :riemann_url, @riemann_url)
-      |> String.to_charlist()
+    do: Runlet.Config.get(:runlet, :riemann_url, @riemann_url)
 
   defp riemann_host,
-    do:
-      Runlet.Config.get(:runlet, :riemann_host, @riemann_host)
-      |> String.to_charlist()
+    do: Runlet.Config.get(:runlet, :riemann_host, @riemann_host)
 
   defp riemann_port,
     do:
@@ -92,7 +88,7 @@ defmodule Runlet.Cmd.Query do
       port: riemann_port(),
       url: riemann_url(),
       retry: riemann_retry_interval(),
-      query: q |> String.to_charlist()
+      query: q
     }
 
     startfun = fn ->
@@ -197,7 +193,7 @@ defmodule Runlet.Cmd.Query do
   @spec open(t) :: {:ok, t}
   defp open(%Runlet.Cmd.Query{host: host, port: port, retry: retry} = state) do
     result =
-      :gun.open(host, port, %{
+      :gun.open(String.to_charlist(host), port, %{
         protocols: [:http],
         http_opts: %{content_handlers: [:gun_sse_h, :gun_data_h]},
         connect_timeout: retry,
@@ -233,20 +229,18 @@ defmodule Runlet.Cmd.Query do
   defp get(
          %Runlet.Cmd.Query{
            url: url,
-           query: query,
+           query: query0,
            retry: retry,
            m: m,
            conn: conn
          } = state0
        ) do
-    equery =
-      query
-      |> List.to_string()
+    query =
+      query0
       |> URI.encode(&URI.char_unreserved?/1)
-      |> String.to_charlist()
 
     ref =
-      :gun.get(conn, [url, equery], [
+      :gun.get(conn, String.to_charlist(url <> query), [
         {"accept", "text/event-stream"}
       ])
 
