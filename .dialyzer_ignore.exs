@@ -1,10 +1,10 @@
-# lib/runlet/cmd/query.ex:94:no_return
+# lib/runlet/cmd/query.ex:96:no_return
 # The created anonymous function has no local return.
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:194:no_return
+# lib/runlet/cmd/query.ex:196:no_return
 # Function open/1 has no local return.
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:196:call
+# lib/runlet/cmd/query.ex:198:call
 # The function call will not succeed.
 #
 # :gun.open(string(), _port :: any(), %{
@@ -20,17 +20,17 @@
 #   {:ok, pid()} | {:error, any()}
 #
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:229:unused_fun
+# lib/runlet/cmd/query.ex:231:unused_fun
 # Function get/1 will never be called.
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:334:unused_fun
+# lib/runlet/cmd/query.ex:329:unused_fun
 # Function parse_error/2 will never be called.
 # ________________________________________________________________________________
 [
   # https://github.com/ninenines/gun/pull/242
-  {"lib/runlet/cmd/query.ex", :call, 196},
-  {"lib/runlet/cmd/query.ex", :no_return, 94},
-  {"lib/runlet/cmd/query.ex", :no_return, 194},
-  {"lib/runlet/cmd/query.ex", :unused_fun, 229},
-  {"lib/runlet/cmd/query.ex", :unused_fun, 334}
+  {"lib/runlet/cmd/query.ex", :call, 198},
+  {"lib/runlet/cmd/query.ex", :no_return, 96},
+  {"lib/runlet/cmd/query.ex", :no_return, 196},
+  {"lib/runlet/cmd/query.ex", :unused_fun, 231},
+  {"lib/runlet/cmd/query.ex", :unused_fun, 329}
 ]

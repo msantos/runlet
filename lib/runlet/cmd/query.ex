@@ -1,4 +1,6 @@
 defmodule Runlet.Cmd.Query do
+  require Logger
+
   @moduledoc "Query a riemann server"
 
   defstruct url: "",
@@ -106,7 +108,7 @@ defmodule Runlet.Cmd.Query do
             {[%Runlet.Event{query: q, event: e}], state}
           rescue
             error ->
-              :error_logger.error_report([error])
+              Logger.error(%{json_parse: error, query: q})
               :gun.close(conn)
               :timer.sleep(retry)
               {:ok, t} = open(state)
@@ -174,7 +176,7 @@ defmodule Runlet.Cmd.Query do
           {:halt, state}
 
           #        unhandled ->
-          #          :error_logger.info_report([{:unhandled_resource, unhandled}])
+          #          Logger.info(%{unhandled_resource: unhandled})
           #          {[], state}
       end
     end
@@ -212,14 +214,14 @@ defmodule Runlet.Cmd.Query do
 
           {:error, error} ->
             Process.demonitor(m, [:flush])
-            :error_logger.error_report([{:gun_await_up, error}])
+            Logger.error(%{gun_await_up: error})
             :gun.close(conn)
             :timer.sleep(retry)
             open(state)
         end
 
       {:error, error} ->
-        :error_logger.info_report([{:gun_open, error}])
+        Logger.info(%{gun_open: error})
         :timer.sleep(retry)
         open(state)
     end
@@ -269,9 +271,7 @@ defmodule Runlet.Cmd.Query do
         Process.demonitor(m, [:flush])
         :gun.close(conn)
 
-        :error_logger.info_report([
-          error
-        ])
+        Logger.info(%{gun_get: error})
 
         :timer.sleep(retry)
         open(state)
@@ -280,11 +280,11 @@ defmodule Runlet.Cmd.Query do
         Process.demonitor(m, [:flush])
         :gun.close(conn)
 
-        :error_logger.info_report([
-          {:fin, is_fin},
-          {:status, status},
-          {:headers, headers}
-        ])
+        Logger.info(%{
+          fin: is_fin,
+          status: status,
+          headers: headers
+        })
 
         :timer.sleep(retry)
         open(state)
@@ -311,14 +311,9 @@ defmodule Runlet.Cmd.Query do
             parse_error(state, t)
 
           {:gun_data, ^conn, ^ref, :fin, t} ->
-            :error_logger.info_report(get: t)
+            Logger.info(%{fin: t})
             Process.demonitor(m, [:flush])
             :gun.close(conn)
-
-            :error_logger.info_report([
-              {:fin, t}
-            ])
-
             :timer.sleep(retry)
             open(state)
 
@@ -332,7 +327,7 @@ defmodule Runlet.Cmd.Query do
   end
 
   defp parse_error(state, body) do
-    :error_logger.info_report(parse_error: state, body: body)
+    Logger.info(%{parse_error: state, body: body})
     Kernel.send(self(), {:runlet_stdout, "query error: " <> body})
     Kernel.send(self(), :runlet_exit)
     Process.demonitor(state.m, [:flush])

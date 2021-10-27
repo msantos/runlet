@@ -1,4 +1,6 @@
 defmodule Runlet do
+  require Logger
+
   @moduledoc false
 
   defstruct uid: "nobody",
@@ -29,6 +31,7 @@ defmodule Runlet do
 
     with {:ok, %{code: code, jobctrl: jobctrl}} <- compile(env) do
       Task.Supervisor.start_child(Runlet.Init, fn ->
+        Logger.metadata(uid: uid, pipeline: pipeline)
         child = self()
 
         Kernel.spawn(fn ->
@@ -39,7 +42,7 @@ defmodule Runlet do
               :ok
 
             error ->
-              :error_logger.error_report(error)
+              Logger.error(%{process_table: error})
           end
 
           Runlet.Process.delete(uid, child)
