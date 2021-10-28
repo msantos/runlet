@@ -19,7 +19,13 @@ defmodule Runlet do
         }
 
   def start_link() do
-    Task.Supervisor.start_link(name: Runlet.Init)
+    Supervisor.start_link(
+      [
+        {Task.Supervisor, name: Runlet.Init},
+        {Task.Supervisor, name: Runlet.ProcessTable}
+      ],
+      strategy: :one_for_one
+    )
   end
 
   @spec fork(t) :: {:ok, pid} | {:error, String.t()}
@@ -30,28 +36,35 @@ defmodule Runlet do
     } = env = default(initial_env)
 
     with {:ok, %{code: code, jobctrl: jobctrl}} <- compile(env) do
-      Task.Supervisor.start_child(Runlet.Init, fn ->
-        Logger.metadata(uid: uid, pipeline: pipeline)
-        child = self()
+      Task.Supervisor.start_child(
+        Runlet.Init,
+        fn ->
+          Logger.metadata(uid: uid, pipeline: pipeline)
+          child = self()
 
-        Kernel.spawn(fn ->
-          Process.monitor(child)
+          _ =
+            Task.Supervisor.start_child(
+              Runlet.ProcessTable,
+              fn ->
+                Process.monitor(child)
 
-          receive do
-            {:DOWN, _, :process, _, _} ->
-              :ok
+                receive do
+                  {:DOWN, _, :process, _, _} ->
+                    Runlet.Process.delete(uid, child)
 
-            error ->
-              Logger.error(%{process_table: error})
-          end
+                  error ->
+                    Logger.error(%{process_table: error})
+                end
+              end,
+              restart: :temporary
+            )
 
-          Runlet.Process.delete(uid, child)
-        end)
-
-        _ = if not jobctrl, do: Runlet.History.add(uid, pipeline, child)
-        _ = Runlet.Process.add(uid, child, pipeline)
-        exec(env, code)
-      end)
+          _ = if not jobctrl, do: Runlet.History.add(uid, pipeline, child)
+          _ = Runlet.Process.add(uid, child, pipeline)
+          exec(env, code)
+        end,
+        restart: :temporary
+      )
     end
   end
 

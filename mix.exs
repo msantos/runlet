@@ -28,7 +28,7 @@ defmodule Runlet.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [extra_applications: [:inets]]
+    [extra_applications: [:inets, :logger]]
   end
 
   # Dependencies can be Hex packages:
