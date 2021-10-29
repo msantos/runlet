@@ -94,8 +94,7 @@ defmodule Runlet.Cmd.Query do
     }
 
     startfun = fn ->
-      {:ok, t} = open(cfg)
-      t
+      open(cfg)
     end
 
     resourcefun = fn %Runlet.Cmd.Query{conn: conn, ref: ref, m: m, retry: retry} =
@@ -111,7 +110,7 @@ defmodule Runlet.Cmd.Query do
               Logger.error(%{json_parse: error, query: q})
               :gun.close(conn)
               :timer.sleep(retry)
-              {:ok, t} = open(state)
+              t = open(state)
               {[], t}
           end
 
@@ -121,7 +120,7 @@ defmodule Runlet.Cmd.Query do
         {:gun_error, ^conn, ^ref, _} ->
           :gun.close(conn)
           :timer.sleep(retry)
-          {:ok, t} = open(state)
+          t = open(state)
           {[], t}
 
         {:gun_down, _, _, _, _, _} ->
@@ -133,7 +132,7 @@ defmodule Runlet.Cmd.Query do
         {:DOWN, ^m, :process, _, _} ->
           :gun.close(conn)
           :timer.sleep(retry)
-          {:ok, t} = open(state)
+          t = open(state)
           {[], t}
 
         {:runlet_stdin, stdin} ->
@@ -155,7 +154,7 @@ defmodule Runlet.Cmd.Query do
         {:runlet_signal, "SIGHUP"} ->
           Process.demonitor(m, [:flush])
           :gun.close(conn)
-          {:ok, t} = open(state)
+          t = open(state)
 
           {[
              %Runlet.Event{
@@ -192,7 +191,7 @@ defmodule Runlet.Cmd.Query do
     )
   end
 
-  @spec open(t) :: {:ok, t}
+  @spec open(t) :: t
   defp open(%Runlet.Cmd.Query{host: host, port: port, retry: retry} = state) do
     result =
       :gun.open(String.to_charlist(host), port, %{
@@ -227,7 +226,7 @@ defmodule Runlet.Cmd.Query do
     end
   end
 
-  @spec get(t) :: {:ok, t}
+  @spec get(t) :: t
   defp get(
          %Runlet.Cmd.Query{
            url: url,
@@ -264,7 +263,7 @@ defmodule Runlet.Cmd.Query do
       end
 
     case response do
-      {:ok, _} = n ->
+      {:ok, n} ->
         n
 
       {:error, _} = error ->
@@ -318,10 +317,18 @@ defmodule Runlet.Cmd.Query do
             open(state)
 
           {:gun_error, ^conn, ^ref, reason} ->
-            {:error, reason}
+            Logger.info(%{gun_error: reason})
+            Process.demonitor(m, [:flush])
+            :gun.close(conn)
+            :timer.sleep(retry)
+            open(state)
 
           {:gun_error, ^conn, reason} ->
-            {:error, reason}
+            Logger.info(%{gun_error: reason})
+            Process.demonitor(m, [:flush])
+            :gun.close(conn)
+            :timer.sleep(retry)
+            open(state)
         end
     end
   end
@@ -331,7 +338,7 @@ defmodule Runlet.Cmd.Query do
     Kernel.send(self(), {:runlet_stdout, "query error: " <> body})
     Kernel.send(self(), :runlet_exit)
     Process.demonitor(state.m, [:flush])
-    {:ok, state}
+    state
   end
 
   defp service(event, []) do
