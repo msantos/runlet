@@ -108,28 +108,40 @@ defmodule Runlet.Cmd.Query do
           rescue
             error ->
               Logger.error(%{json_parse: error, query: q})
-              :gun.close(conn)
-              :timer.sleep(retry)
-              t = open(state)
-              {[], t}
+              {[], state}
           end
 
-        {:gun_sse, ^conn, ^ref, _} ->
+        {:gun_sse, ^conn, ^ref, event} ->
+          Logger.info(%{gun_sse: event})
           {[], state}
 
-        {:gun_error, ^conn, ^ref, _} ->
+        {:gun_error, ^conn, ^ref, reason} ->
+          Logger.error(%{gun_error: reason})
+          Process.demonitor(m, [:flush])
           :gun.close(conn)
           :timer.sleep(retry)
           t = open(state)
           {[], t}
 
-        {:gun_down, _, _, _, _, _} ->
+        {:gun_error, ^conn, reason} ->
+          Logger.error(%{gun_error: reason})
+          Process.demonitor(m, [:flush])
+          :gun.close(conn)
+          :timer.sleep(retry)
+          t = open(state)
+          {[], t}
+
+        {:gun_down, _, _, reason, streams, _} ->
+          Logger.info(%{gun_down: reason, streams: streams})
           {[], state}
 
         {:gun_up, _, _} ->
-          {[], state}
+          Logger.info(%{gun_up: "reconnecting"})
+          t = get(state)
+          {[], t}
 
         {:DOWN, ^m, :process, _, _} ->
+          Logger.info(%{down: "reconnecting"})
           :gun.close(conn)
           :timer.sleep(retry)
           t = open(state)
@@ -193,22 +205,23 @@ defmodule Runlet.Cmd.Query do
 
   @spec open(t) :: t
   defp open(%Runlet.Cmd.Query{host: host, port: port, retry: retry} = state) do
-    result =
-      :gun.open(String.to_charlist(host), port, %{
-        protocols: [:http],
-        http_opts: %{content_handlers: [:gun_sse_h, :gun_data_h]},
-        connect_timeout: retry,
-        # retry forever
-        retry: 0xFFFFFF,
-        retry_timeout: retry
-      })
+    opt = %{
+      protocols: [:http],
+      http_opts: %{content_handlers: [:gun_sse_h, :gun_data_h]},
+      connect_timeout: retry,
+      # retry forever
+      retry: 0xFFFFFF,
+      retry_timeout: retry
+    }
+
+    result = :gun.open(String.to_charlist(host), port, opt)
 
     case result do
       {:ok, conn} ->
         m = Process.monitor(conn)
 
         case :gun.await_up(conn, m) do
-          {:ok, :http} ->
+          {:ok, _} ->
             get(%{state | conn: conn, m: m})
 
           {:error, error} ->
