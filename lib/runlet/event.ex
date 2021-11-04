@@ -10,6 +10,20 @@ defmodule Runlet.Event do
           query: binary,
           attr: %{optional(atom) => integer | float | binary}
         }
+
+  @doc """
+  Convert the contained event to a map.
+  """
+  @spec to_map(struct() | map()) :: map()
+  def to_map(e) when is_struct(e), do: Map.from_struct(e)
+  def to_map(e) when is_map(e), do: e
+
+  @doc """
+  Takes all entries corresponding to the given keys in the contained
+  event and extracts them into a separate map.
+  """
+  @spec split(struct() | map(), [any()]) :: {map(), map()}
+  def split(e, k), do: e |> to_map() |> Map.split(k)
 end
 
 require Runlet.Fmt

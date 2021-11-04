@@ -16,7 +16,7 @@ defmodule Runlet.Cmd.Select do
         t
 
       %Runlet.Event{event: e} = t ->
-        {selected, _} = e |> Map.from_struct() |> Map.split(k)
+        {selected, _} = e |> Runlet.Event.split(k)
         %{t | event: selected}
     end)
   end

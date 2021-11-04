@@ -28,8 +28,8 @@ defmodule Runlet.Cmd.Dedup do
           {[t], state}
 
         %Runlet.Event{event: e} = t, state ->
-          {match, _} = e |> Map.from_struct() |> Map.split(k)
-          {content, _} = e |> Map.from_struct() |> Map.split(v)
+          {match, _} = e |> Runlet.Event.split(k)
+          {content, _} = e |> Runlet.Event.split(v)
 
           case Map.fetch(state, match) do
             {:ok, ^content} ->
