@@ -12,8 +12,8 @@ defmodule Runlet.Cmd.Timeout do
       stream,
       fn ->
         ref = :erlang.make_ref()
-        {:ok, tref} = :timer.send_after(timeout, {ref, 'runlet_timeout'})
-        {:ok, kill} = :timer.exit_after(timeout, 'timeout')
+        {:ok, tref} = :timer.send_after(timeout, {ref, :runlet_timeout})
+        {:ok, kill} = :timer.exit_after(timeout, :timeout)
         {tref, ref, kill}
       end,
       fn
@@ -32,13 +32,13 @@ defmodule Runlet.Cmd.Timeout do
 
   defp event(t, tref, ref, timeout) do
     receive do
-      {^ref, 'runlet_timeout'} ->
+      {^ref, :runlet_timeout} ->
         {:halt, {tref, ref, nil}}
     after
       0 ->
         _ = :timer.cancel(tref)
         ref1 = :erlang.make_ref()
-        {:ok, tref1} = :timer.send_after(timeout, {ref1, 'runlet_timeout'})
+        {:ok, tref1} = :timer.send_after(timeout, {ref1, :runlet_timeout})
         {[t], {tref1, ref1, nil}}
     end
   end

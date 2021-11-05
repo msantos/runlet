@@ -28,31 +28,28 @@ defmodule Runlet.Cmd.Suppress do
       stream,
       fn ->
         ref = :erlang.make_ref()
-        {:ok, tref} = :timer.send_after(timeout, {ref, 'runlet_suppress'})
+        {:ok, tref} = :timer.send_after(timeout, {ref, :runlet_suppress})
         %Runlet.Cmd.Suppress{tref: tref, ref: ref}
       end,
       fn
         %Runlet.Event{event: %Runlet.Event.Signal{}} = t, state ->
           {[t], state}
 
-        t, state ->
-          event(t, state)
+        t, %Runlet.Cmd.Suppress{active: true} = state ->
+          {[t], state}
+
+        t, %Runlet.Cmd.Suppress{ref: ref, active: false} = state ->
+          receive do
+            {^ref, :runlet_suppress} ->
+              {[t], %{state | active: true}}
+          after
+            0 ->
+              {[], state}
+          end
       end,
       fn %Runlet.Cmd.Suppress{tref: tref} ->
         :timer.cancel(tref)
       end
     )
-  end
-
-  defp event(t, %Runlet.Cmd.Suppress{active: true} = state), do: {[t], state}
-
-  defp event(t, %Runlet.Cmd.Suppress{ref: ref, active: false} = state) do
-    receive do
-      {^ref, 'runlet_suppress'} ->
-        {[t], %{state | active: true}}
-    after
-      0 ->
-        {[], state}
-    end
   end
 end
