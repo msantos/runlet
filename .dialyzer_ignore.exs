@@ -1,10 +1,10 @@
 # lib/runlet/cmd/query.ex:96:no_return
 # The created anonymous function has no local return.
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:207:no_return
+# lib/runlet/cmd/query.ex:203:no_return
 # Function open/1 has no local return.
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:217:call
+# lib/runlet/cmd/query.ex:213:call
 # The function call will not succeed.
 #
 # :gun.open(
@@ -26,7 +26,7 @@
 # ________________________________________________________________________________
 [
   # https://github.com/ninenines/gun/pull/242
-  {"lib/runlet/cmd/query.ex", :call, 217},
+  {"lib/runlet/cmd/query.ex", :call, 213},
   {"lib/runlet/cmd/query.ex", :no_return, 96},
-  {"lib/runlet/cmd/query.ex", :no_return, 207}
+  {"lib/runlet/cmd/query.ex", :no_return, 203}
 ]
