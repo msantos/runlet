@@ -14,7 +14,7 @@ defmodule Runlet.Ctrl.Fmt do
     [
       %Runlet.Event{
         event: %Runlet.Event.Ctrl{
-          service: "kill",
+          service: "fmt",
           description: result,
           host: "#{node()}"
         },

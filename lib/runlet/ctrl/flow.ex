@@ -54,11 +54,11 @@ defmodule Runlet.Ctrl.Flow do
     [
       %Runlet.Event{
         event: %Runlet.Event.Ctrl{
-          service: "limit",
+          service: "flow",
           description: result,
           host: "#{node()}"
         },
-        query: "limit #{pid} #{count} #{minutes} #{uid}"
+        query: "flow #{pid} #{count} #{minutes} #{uid}"
       }
     ]
   end
