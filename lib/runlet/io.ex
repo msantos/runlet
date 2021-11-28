@@ -1,4 +1,6 @@
 defmodule Runlet.IO do
+  require Logger
+
   @moduledoc false
 
   @doc """
@@ -8,7 +10,7 @@ defmodule Runlet.IO do
   """
   @spec debug(Enumerable.t()) :: Enumerable.t()
   def debug(stream) do
-    Stream.each(stream, fn t -> :error_logger.info_report(t) end)
+    Stream.each(stream, fn t -> Logger.debug(t) end)
   end
 
   @doc """
