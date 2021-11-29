@@ -18,17 +18,11 @@ defmodule Runlet.Cmd.Fmt do
         end
 
       e =
-        case f do
-          true ->
-            case t do
-              %Runlet.Event{} ->
-                Runlet.Fmt.fmt(t.event)
+        case {f, t} do
+          {true, %Runlet.Event{}} ->
+            Runlet.Fmt.fmt(t.event)
 
-              _ ->
-                Runlet.Fmt.fmt(t)
-            end
-
-          false ->
+          _ ->
             Runlet.Fmt.fmt(t)
         end
         |> URI.encode(&(&1 == 9 || &1 == 10 || (&1 >= 32 && &1 <= 126)))
@@ -39,8 +33,7 @@ defmodule Runlet.Cmd.Fmt do
              "#{e}",
              t.attr
              |> Map.to_list()
-             |> Enum.map(fn {_, v} -> Runlet.Fmt.fmt(v) end)
-             |> Enum.join(" "),
+             |> Enum.map_join(" ", fn {_, v} -> Runlet.Fmt.fmt(v) end),
              "#{Runlet.Fmt.fmt(self())}"
            ],
            " "

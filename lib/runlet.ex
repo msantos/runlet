@@ -15,6 +15,7 @@ defmodule Runlet do
           pipeline: binary,
           stdout: (String.t() -> (Runlet.Event.t() | String.t() -> any)) | nil,
           aliases: Runlet.CLI.t() | nil,
+          append: binary | Runlet.CLI.t(),
           state: any
         }
 
@@ -102,7 +103,7 @@ defmodule Runlet do
     end
   end
 
-  @spec append(%Runlet{append: binary | Runlet.CLI.t()}, [Runlet.CLI.t()]) ::
+  @spec append(Runlet.t(), [Runlet.CLI.t()]) ::
           {:ok, [Runlet.CLI.t()]} | {:error, String.t()}
   defp append(%Runlet{append: nil}, pipeline) do
     {:ok, pipeline}

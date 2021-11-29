@@ -4,7 +4,7 @@ defmodule Runlet.Mixfile do
   def project do
     [
       app: :runlet,
-      version: "1.1.1",
+      version: "1.1.2",
       elixir: "~> 1.9",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -46,9 +46,9 @@ defmodule Runlet.Mixfile do
       {:gun, "~> 1.3"},
       {:poison, "~> 3.1.0"},
       {:vex, "~> 0.6.0"},
-      {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.24", only: :dev, runtime: false}
     ]
   end
 

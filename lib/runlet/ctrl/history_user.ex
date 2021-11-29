@@ -44,7 +44,7 @@ defmodule Runlet.Ctrl.HistoryUser do
         lookup(env, Path.basename(name), index)
 
       names ->
-        n = names |> Enum.map(fn t -> Path.basename(t) end) |> Enum.join(", ")
+        n = names |> Enum.map_join(", ", &Path.basename/1)
 
         [
           %Runlet.Event{

@@ -99,6 +99,11 @@ defmodule Runlet.CLI do
 
   def ast(pipeline, commands) do
     fun = fn {cmd, arg} ->
+      maybe_argv = fn
+        {{_mod, _fun}, _argv} = t -> t
+        {mod, fun} -> {{mod, fun}, arg}
+      end
+
       case List.keyfind(commands, cmd, 0) do
         nil ->
           {:error, "#{cmd}: not found"}
@@ -110,21 +115,12 @@ defmodule Runlet.CLI do
           {:ok, [{{mod, fun}, arg}]}
 
         {^cmd, form} when is_list(form) ->
-          insn =
-            form
-            |> Enum.map(fn
-              {{_mod, _fun}, _argv} = t -> t
-              {mod, fun} -> {{mod, fun}, arg}
-            end)
-            |> Enum.reverse()
-
-          {:ok, insn}
+          {:ok, form |> Enum.map(maybe_argv) |> Enum.reverse()}
       end
     end
 
-    with {:ok, command} <- parse(pipeline),
-         {:ok, code} <- expand(command, fun) do
-      {:ok, code}
+    with {:ok, command} <- parse(pipeline) do
+      expand(command, fun)
     end
   end
 
@@ -181,9 +177,8 @@ defmodule Runlet.CLI do
           | {:error, String.t()}
   def parse(command) when is_binary(command) do
     result =
-      with {:ok, tokens, _} <- lex(command),
-           {:ok, pipeline} <- :runlet_parser.parse(tokens) do
-        {:ok, pipeline}
+      with {:ok, tokens, _} <- lex(command) do
+        :runlet_parser.parse(tokens)
       end
 
     case result do

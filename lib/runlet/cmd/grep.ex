@@ -16,7 +16,7 @@ defmodule Runlet.Cmd.Grep do
       %Runlet.Event{event: e} = t, re ->
         case e
              |> to_bin()
-             |> Enum.any?(fn x -> Regex.match?(re, x) end) do
+             |> Enum.any?(&Regex.match?(re, &1)) do
           true -> {[t], re}
           false -> {[], re}
         end
