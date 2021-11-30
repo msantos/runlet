@@ -34,20 +34,21 @@ defmodule Runlet.CLI do
 
   ## Examples
 
-    iex> Runlet.CLI.compile!(
-    ...>   ~s(test "foo" | bar 123),
-    ...>   [{"test", [{[:Fake, :Cmd, :AddArg], :exec},
-    ...>              {{:Fake, :Cmd, :StaticArg}, ["static arg"]}]},
-    ...>    {"bar", {[:Fake, :Cmd, :IntArg], :exec}}])
-    {:|>, [context: Elixir, import: Kernel],
-     [{:|>, [context: Elixir, import: Kernel],
-       [{{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :AddArg]}, :exec]},
-         [], ["foo"]},
-        {{:., [],
-          [{:__aliases__, [alias: false], {:Fake, :Cmd, :StaticArg}},
-           ["static arg"]]}, [], ["foo"]}]},
-      {{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :IntArg]}, :exec]},
-       [], '{'}]}
+      iex> Runlet.CLI.compile!(
+      ...>   ~s(test "foo" | bar 123),
+      ...>   [{"test", [{[:Fake, :Cmd, :AddArg], :exec},
+      ...>              {{:Fake, :Cmd, :StaticArg}, ["static arg"]}]},
+      ...>    {"bar", {[:Fake, :Cmd, :IntArg], :exec}}])
+      {:|>, [context: Elixir, import: Kernel],
+       [{:|>, [context: Elixir, import: Kernel],
+         [{{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :AddArg]}, :exec]},
+           [], ["foo"]},
+          {{:., [],
+            [{:__aliases__, [alias: false], {:Fake, :Cmd, :StaticArg}},
+             ["static arg"]]}, [], ["foo"]}]},
+        {{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :IntArg]}, :exec]},
+         [], '{'}]}
+
   """
   @spec compile!(e, [t]) :: [t]
   def compile!(pipeline, commands) do
@@ -74,21 +75,22 @@ defmodule Runlet.CLI do
 
   ## Examples
 
-    iex> Runlet.CLI.compile(
-    ...>   ~s(test "foo" | bar 123),
-    ...>   [{"test", [{[:Fake, :Cmd, :AddArg], :exec},
-    ...>              {{:Fake, :Cmd, :StaticArg}, ["static arg"]}]},
-    ...>    {"bar", {[:Fake, :Cmd, :IntArg], :exec}}])
-    {:ok,
-     {:|>, [context: Elixir, import: Kernel],
-      [{:|>, [context: Elixir, import: Kernel],
-        [{{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :AddArg]}, :exec]},
-          [], ["foo"]},
-         {{:., [],
-           [{:__aliases__, [alias: false], {:Fake, :Cmd, :StaticArg}},
-            ["static arg"]]}, [], ["foo"]}]},
-       {{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :IntArg]}, :exec]},
-        [], '{'}]}}
+      iex> Runlet.CLI.compile(
+      ...>   ~s(test "foo" | bar 123),
+      ...>   [{"test", [{[:Fake, :Cmd, :AddArg], :exec},
+      ...>              {{:Fake, :Cmd, :StaticArg}, ["static arg"]}]},
+      ...>    {"bar", {[:Fake, :Cmd, :IntArg], :exec}}])
+      {:ok,
+       {:|>, [context: Elixir, import: Kernel],
+        [{:|>, [context: Elixir, import: Kernel],
+          [{{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :AddArg]}, :exec]},
+            [], ["foo"]},
+           {{:., [],
+             [{:__aliases__, [alias: false], {:Fake, :Cmd, :StaticArg}},
+              ["static arg"]]}, [], ["foo"]}]},
+         {{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :IntArg]}, :exec]},
+          [], '{'}]}}
+
   """
   @spec compile(e, [t]) :: {:ok, [t]} | {:error, String.t()}
   def compile(pipeline, commands) do
@@ -169,8 +171,9 @@ defmodule Runlet.CLI do
 
   ## Examples
 
-    iex(7)> Runlet.CLI.parse(~s(test "foo" | bar 123 | out > 456))
-    {:ok, [{"test", ["foo"]}, {"bar", '{'}, {"out", []}, {">", [456]}]}
+      iex> Runlet.CLI.parse(~s(test "foo" | bar 123 | out > 456))
+      {:ok, [{"test", ["foo"]}, {"bar", '{'}, {"out", []}, {">", [456]}]}
+
   """
   @spec parse(e) ::
           {:ok, [{String.t(), [Runlet.PID.t() | String.t()]}]}
@@ -200,11 +203,12 @@ defmodule Runlet.CLI do
 
   ## Examples
 
-    iex> Runlet.CLI.insert(~s(test "foo" | bar 123 | another),
-    ...>   ~s(insert | here), 2)
-    {:ok,
-     [{"test", ["foo"]}, {"bar", '{'}, {"insert", []}, {"here", []},
-      {"another", []}]}
+      iex> Runlet.CLI.insert(~s(test "foo" | bar 123 | another),
+      ...>   ~s(insert | here), 2)
+      {:ok,
+       [{"test", ["foo"]}, {"bar", '{'}, {"insert", []}, {"here", []},
+        {"another", []}]}
+
   """
   @spec insert(e, String.t() | [t], integer) ::
           {:ok, [t]} | {:error, String.t()}
@@ -223,10 +227,11 @@ defmodule Runlet.CLI do
 
   ## Examples
 
-    iex> Runlet.CLI.prepend(~s(test "foo" | bar 123 | another), ~s(insert | here))
-    {:ok,
-     [{"insert", []}, {"here", []}, {"test", ["foo"]}, {"bar", '{'},
-      {"another", []}]}
+      iex> Runlet.CLI.prepend(~s(test "foo" | bar 123 | another), ~s(insert | here))
+      {:ok,
+       [{"insert", []}, {"here", []}, {"test", ["foo"]}, {"bar", '{'},
+        {"another", []}]}
+
   """
   @spec prepend(e, e) :: {:ok, [t]} | {:error, String.t()}
   def prepend(code, command), do: insert(code, command, 0)
@@ -236,10 +241,11 @@ defmodule Runlet.CLI do
 
   ## Examples
 
-    iex> Runlet.CLI.append(~s(test "foo" | bar 123 | another), ~s(insert | here))
-    {:ok,
-     [{"test", ["foo"]}, {"bar", '{'}, {"another", []}, {"insert", []},
-      {"here", []}]}
+      iex> Runlet.CLI.append(~s(test "foo" | bar 123 | another), ~s(insert | here))
+      {:ok,
+       [{"test", ["foo"]}, {"bar", '{'}, {"another", []}, {"insert", []},
+        {"here", []}]}
+
   """
   @spec append(e, e) :: {:ok, [t]} | {:error, String.t()}
   def append(code, command), do: insert(code, command, -1)

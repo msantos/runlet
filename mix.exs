@@ -4,7 +4,7 @@ defmodule Runlet.Mixfile do
   def project do
     [
       app: :runlet,
-      version: "1.1.2",
+      version: "1.1.3",
       elixir: "~> 1.9",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -20,7 +20,10 @@ defmodule Runlet.Mixfile do
           :race_conditions,
           :underspecs
         ]
-      ]
+      ],
+      name: "runlet",
+      source_url: "https://github.com/msantos/runlet",
+      homepage_url: "https://github.com/msantos/runlet"
     ]
   end
 

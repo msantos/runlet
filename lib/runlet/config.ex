@@ -21,6 +21,7 @@ defmodule Runlet.Config do
 
       iex> :default = #{__MODULE__}.get(:myapp, :missing_var, :default)
       :default
+
   """
   @spec get(atom, atom, term | nil) :: term
   def get(app, key, default \\ nil) when is_atom(app) and is_atom(key) do
