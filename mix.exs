@@ -23,7 +23,11 @@ defmodule Runlet.Mixfile do
       ],
       name: "runlet",
       source_url: "https://github.com/msantos/runlet",
-      homepage_url: "https://github.com/msantos/runlet"
+      homepage_url: "https://github.com/msantos/runlet",
+      docs: [
+        source_ref: "master",
+        extras: ["README.md"]
+      ]
     ]
   end
 
