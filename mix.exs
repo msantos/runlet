@@ -4,7 +4,7 @@ defmodule Runlet.Mixfile do
   def project do
     [
       app: :runlet,
-      version: "1.1.3",
+      version: "1.1.4",
       elixir: "~> 1.9",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -25,6 +25,7 @@ defmodule Runlet.Mixfile do
       source_url: "https://github.com/msantos/runlet",
       homepage_url: "https://github.com/msantos/runlet",
       docs: [
+        main: "readme",
         source_ref: "master",
         extras: ["README.md"]
       ]

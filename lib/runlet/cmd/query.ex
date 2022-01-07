@@ -114,12 +114,20 @@ defmodule Runlet.Cmd.Query do
           Logger.info(%{gun_sse: event})
           {[], state}
 
+        {:gun_sse, conn, _, _} ->
+          :gun.close(conn)
+          {[], state}
+
         {:gun_error, ^conn, ^ref, reason} ->
           Logger.error(%{gun_error: reason})
           Process.demonitor(m, [:flush])
           close(state)
           t = open(state)
           {[], t}
+
+        {:gun_error, conn, _, _} ->
+          :gun.close(conn)
+          {[], state}
 
         {:gun_error, ^conn, reason} ->
           Logger.error(%{gun_error: reason})
@@ -128,8 +136,13 @@ defmodule Runlet.Cmd.Query do
           t = open(state)
           {[], t}
 
-        {:gun_down, _, _, reason, streams, _} ->
+        {:gun_error, conn, _} ->
+          :gun.close(conn)
+          {[], state}
+
+        {:gun_down, conn, _, reason, streams, _} ->
           Logger.info(%{gun_down: reason, streams: streams})
+          :gun.close(conn)
           {[], state}
 
         {:gun_up, _, _} ->
@@ -142,6 +155,9 @@ defmodule Runlet.Cmd.Query do
           close(state)
           t = open(state)
           {[], t}
+
+        {:DOWN, _, :process, _, _} ->
+          {[], state}
 
         {:runlet_stdin, stdin} ->
           {[
@@ -182,9 +198,9 @@ defmodule Runlet.Cmd.Query do
         :runlet_exit ->
           {:halt, state}
 
-          #        unhandled ->
-          #          Logger.info(%{unhandled_resource: unhandled})
-          #          {[], state}
+          # unhandled ->
+          #   Logger.info(%{unhandled_resource: unhandled})
+          #   {[], state}
       end
     end
 
@@ -206,7 +222,7 @@ defmodule Runlet.Cmd.Query do
       http_opts: %{content_handlers: [:gun_sse_h, :gun_data_h]},
       connect_timeout: retry,
       # retry forever
-      retry: 0xFFFFFF,
+      retry: 3,
       retry_timeout: retry
     }
 
