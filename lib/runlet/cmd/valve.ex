@@ -29,12 +29,12 @@ defmodule Runlet.Cmd.Valve do
           receive do
             {:runlet_close, seconds} when tref == nil and is_integer(seconds) ->
               {:ok, tref} = :timer.send_after(seconds * 1_000, :runlet_open)
-              {[], %{state | tref: tref, open: false, dropped: dropped + 1}}
+              {[], %{state | tref: tref, open: false, dropped: dropped}}
 
             {:runlet_close, seconds} when is_integer(seconds) ->
               _ = :timer.cancel(tref)
               {:ok, tref} = :timer.send_after(seconds * 1_000, :runlet_open)
-              {[], %{state | tref: tref, open: false, dropped: dropped + 1}}
+              {[], %{state | tref: tref, open: false, dropped: dropped}}
 
             {:runlet_close, _} when open == true ->
               {[
@@ -48,7 +48,7 @@ defmodule Runlet.Cmd.Valve do
                ], state}
 
             {:runlet_close, _} ->
-              {[], %{state | dropped: dropped + 1}}
+              {[], %{state | dropped: dropped}}
 
             :runlet_open when tref == nil ->
               {[
