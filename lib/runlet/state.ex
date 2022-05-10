@@ -57,12 +57,18 @@ defmodule Runlet.State do
 
   @spec open(binary, String.t(), String.t()) :: {:ok, atom} | {:error, any}
   defp open(dir, type, id) do
+    open(dir, type, id, :read_write)
+  end
+
+  @spec open(binary, String.t(), String.t(), :read | :read_write) ::
+          {:ok, atom} | {:error, any}
+  defp open(dir, type, id, access) do
     user = encode(id)
     table = :erlang.binary_to_atom("#{type}_#{user}", :latin1)
     dirname = Path.join([dir, user])
     File.mkdir_p!(dirname)
     filename = [dirname, type] |> Path.join() |> String.to_charlist()
-    :dets.open_file(table, type: :set, file: filename)
+    :dets.open_file(table, type: :set, file: filename, access: access)
   end
 
   @doc """
@@ -77,10 +83,16 @@ defmodule Runlet.State do
   @spec table(binary, String.t(), String.t()) :: [tuple]
   def table(dir, type, id) do
     user = encode(id)
-    {:ok, db} = open(dir, type, user)
-    r = :dets.foldl(fn x, a -> [x | a] end, [], db)
-    _ = :dets.close(db)
-    r
+
+    case open(dir, type, user, :read) do
+      {:ok, db} ->
+        r = :dets.foldl(fn x, a -> [x | a] end, [], db)
+        _ = :dets.close(db)
+        r
+
+      {:error, {:file_error, _, :enoent}} ->
+        []
+    end
   end
 
   @doc """
