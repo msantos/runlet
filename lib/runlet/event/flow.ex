@@ -19,9 +19,35 @@ require Runlet.Fmt
 defimpl Runlet.Fmt, for: Runlet.Event.Flow do
   def fmt(%Runlet.Event.Flow{
         events: events,
+        dropped: 0,
+        rate: rate
+      })
+      when rate < 2 do
+    "(flow: #{events} events)"
+  end
+
+  def fmt(%Runlet.Event.Flow{
+        events: events,
+        dropped: 0,
+        rate: rate
+      }) do
+    "(flow: #{events} events, #{Float.round(rate, 2)}/s)"
+  end
+
+  def fmt(%Runlet.Event.Flow{
+        events: events,
+        dropped: dropped,
+        rate: rate
+      })
+      when rate < 2 do
+    "(flow: #{events} events, #{dropped} dropped)"
+  end
+
+  def fmt(%Runlet.Event.Flow{
+        events: events,
         dropped: dropped,
         rate: rate
       }) do
-    "(flow: #{events} events, #{dropped} dropped, #{Float.round(rate, 2)}/sec)"
+    "(flow: #{events} events, #{dropped} dropped, #{Float.round(rate, 2)}/s)"
   end
 end
