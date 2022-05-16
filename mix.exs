@@ -50,7 +50,7 @@ defmodule Runlet.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ex_rated, "~> 1.3.1"},
+      {:ex_rated, "~> 2.0"},
       {:gun, "~> 1.3"},
       {:poison, "~> 3.1.0"},
       {:vex, "~> 0.6.0"},
