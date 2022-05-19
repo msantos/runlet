@@ -24,7 +24,7 @@ defmodule RunletFlowTest do
 
     assert dropped > 5
     assert events > 5
-    assert rate > 1
+    assert ^rate = 0
     assert ^count = 5
   end
 end

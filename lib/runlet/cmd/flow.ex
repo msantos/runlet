@@ -4,8 +4,7 @@ defmodule Runlet.Cmd.Flow do
   defstruct count: 1000,
             seconds: 10,
             events: 0,
-            dropped: 0,
-            ts: 0
+            dropped: 0
 
   @doc """
   Drop events that exceed a rate in count per seconds.
@@ -21,8 +20,7 @@ defmodule Runlet.Cmd.Flow do
         struct(
           Runlet.Cmd.Flow,
           count: flow_count,
-          seconds: flow_seconds,
-          ts: now()
+          seconds: flow_seconds
         )
       end,
       fn
@@ -34,8 +32,7 @@ defmodule Runlet.Cmd.Flow do
           count: count0,
           seconds: seconds0,
           events: events0,
-          dropped: dropped,
-          ts: ts
+          dropped: dropped
         } = state ->
           {limit, scale} =
             receive do
@@ -54,9 +51,7 @@ defmodule Runlet.Cmd.Flow do
           events = events0 + 1
 
           case ExRated.check_rate(name, scale * 1_000, limit) do
-            {:ok, _} ->
-              elapsed = elapsed(ts)
-
+            {:ok, counter} ->
               {[
                  %{
                    t
@@ -65,7 +60,7 @@ defmodule Runlet.Cmd.Flow do
                          flow: %Runlet.Event.Flow{
                            events: events,
                            dropped: dropped,
-                           rate: events / elapsed
+                           rate: limit - counter
                          }
                        })
                  }
@@ -94,16 +89,5 @@ defmodule Runlet.Cmd.Flow do
         :ok
       end
     )
-  end
-
-  @spec now() :: pos_integer
-  defp now(), do: :erlang.system_time(:seconds)
-
-  @spec elapsed(pos_integer) :: pos_integer
-  defp elapsed(ts) do
-    case now() - ts do
-      x when x > 0 -> x
-      _ -> 1
-    end
   end
 end
