@@ -29,8 +29,8 @@ end
 require Runlet.Fmt
 
 defimpl Runlet.Fmt, for: Runlet.Event do
-  @spec fmt(Runlet.Event.t()) :: binary
+  @spec fmt(Runlet.Event.t()) :: iodata | no_return
   def fmt(event) do
-    Poison.encode!(event, pretty: true)
+    Poison.encode!(event)
   end
 end

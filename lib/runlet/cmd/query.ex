@@ -100,13 +100,12 @@ defmodule Runlet.Cmd.Query do
     resourcefun = fn %Runlet.Cmd.Query{conn: conn, ref: ref, m: m} = state ->
       receive do
         {:gun_sse, ^conn, ^ref, %{event_type: "message", data: data}} ->
-          try do
-            event = Poison.Parser.parse!(data)
-            e = service(event, structs)
-            {[%Runlet.Event{query: q, event: e}], state}
-          rescue
-            error ->
-              Logger.error(%{json_parse: error, query: q})
+          case service(data, structs) do
+            {:ok, e} ->
+              {[%Runlet.Event{query: q, event: e}], state}
+
+            {:error, error} ->
+              Logger.error(%{json_parse: error, query: q, data: data})
               {[], state}
           end
 
@@ -364,25 +363,31 @@ defmodule Runlet.Cmd.Query do
   end
 
   defp service(event, []) do
-    event
+    Poison.decode(event)
   end
 
   defp service(event, [struct | structs]) do
-    t =
+    e =
       case struct do
         {as, n} ->
-          Poison.Decode.decode(
+          Poison.decode(
             event,
             as: struct(as, Enum.map(n, fn {k, v} -> {k, struct(v)} end))
           )
 
         as ->
-          Poison.Decode.decode(event, as: struct(as))
+          Poison.decode(event, as: struct(as))
       end
 
-    case Vex.valid?(t) do
-      true -> t
-      false -> service(event, structs)
+    case e do
+      {:ok, t} ->
+        case Vex.valid?(t) do
+          true -> e
+          false -> service(event, structs)
+        end
+
+      {:error, _} ->
+        service(event, structs)
     end
   end
 end

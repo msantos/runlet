@@ -52,7 +52,7 @@ defmodule Runlet.Mixfile do
     [
       {:ex_rated, "~> 2.0"},
       {:gun, "~> 1.3"},
-      {:poison, "~> 3.1.0"},
+      {:poison, "~> 5.0"},
       {:vex, "~> 0.9.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
