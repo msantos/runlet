@@ -4,7 +4,7 @@
 # lib/runlet/cmd/query.ex:218:no_return
 # Function open/1 has no local return.
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:228:call
+# lib/runlet/cmd/query.ex:227:call
 # The function call will not succeed.
 # 
 # :gun.open(
@@ -24,7 +24,7 @@
 #   {:ok, pid()} | {:error, any()}
 # 
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:375:call
+# lib/runlet/cmd/query.ex:374:call
 # The function call will not succeed.
 # 
 # Poison.decode(_event :: any(), [{:as, struct()}, ...])
@@ -33,7 +33,7 @@
 # (iodata(), Poison.Decoder.options()) :: {:ok, Poison.Parser.t()} | {:error, Exception.t()}
 # 
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:379:call
+# lib/runlet/cmd/query.ex:378:call
 # The function call will not succeed.
 # 
 # Poison.decode(_event :: any(), [{:as, struct()}, ...])
@@ -44,7 +44,15 @@
 # ________________________________________________________________________________
 [
   # https://github.com/ninenines/gun/pull/242
-  {"lib/runlet/cmd/query.ex", :call, 228},
+  {"lib/runlet/cmd/query.ex", :call, 227},
   {"lib/runlet/cmd/query.ex", :no_return, 96},
-  {"lib/runlet/cmd/query.ex", :no_return, 218}
+  {"lib/runlet/cmd/query.ex", :no_return, 218},
+
+  #  @typep as :: map | struct | [as]
+  #
+  #  @type options :: %{
+  #              optional(:as) => as
+  #            }
+  {"lib/runlet/cmd/query.ex", :call, 374},
+  {"lib/runlet/cmd/query.ex", :call, 378}
 ]

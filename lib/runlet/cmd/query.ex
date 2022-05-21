@@ -220,7 +220,6 @@ defmodule Runlet.Cmd.Query do
       protocols: [:http],
       http_opts: %{content_handlers: [:gun_sse_h, :gun_data_h]},
       connect_timeout: retry,
-      # retry forever
       retry: 3,
       retry_timeout: retry
     }
