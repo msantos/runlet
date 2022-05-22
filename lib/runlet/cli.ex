@@ -22,7 +22,7 @@ defmodule Runlet.CLI do
 
   Commands are looked up in the application environment:
 
-    Application.get_env(:runlet, :aliases, [])
+      Application.get_env(:runlet, :aliases, [])
   """
   @spec compile!(e) :: [t]
   def compile!(pipeline) do
@@ -59,11 +59,11 @@ defmodule Runlet.CLI do
   end
 
   @doc ~S"""
-  Compile a runlet expression into Elixr AST
+  Compile a runlet expression to AST
 
   Commands are looked up in the application environment:
 
-    Application.get_env(:runlet, :aliases, [])
+      Application.get_env(:runlet, :aliases, [])
   """
   @spec compile(e) :: {:ok, [t]} | {:error, String.t()}
   def compile(pipeline) do
@@ -71,7 +71,7 @@ defmodule Runlet.CLI do
   end
 
   @doc ~S"""
-  Compile a runlet expression into the AST
+  Compile a runlet expression to AST
 
   ## Examples
 

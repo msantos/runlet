@@ -24,7 +24,7 @@
 #   {:ok, pid()} | {:error, any()}
 # 
 # ________________________________________________________________________________
-# lib/runlet/cmd/query.ex:374:call
+# lib/runlet/cmd/query.ex:372:call
 # The function call will not succeed.
 # 
 # Poison.decode(_event :: any(), [{:as, struct()}, ...])
@@ -53,6 +53,6 @@
   #  @type options :: %{
   #              optional(:as) => as
   #            }
-  {"lib/runlet/cmd/query.ex", :call, 374},
+  {"lib/runlet/cmd/query.ex", :call, 372},
   {"lib/runlet/cmd/query.ex", :call, 378}
 ]

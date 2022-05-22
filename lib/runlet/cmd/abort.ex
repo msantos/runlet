@@ -5,8 +5,8 @@ defmodule Runlet.Cmd.Abort do
   Places a maximum rate limit on an event stream. Exceeding the limit
   terminates the process.
 
-    # abort if number of events exceeds 5 in 2 minutes
-    args: 5 120
+        # abort if number of events exceeds 5 in 2 minutes
+        abort 5 120
   """
   @spec exec(Enumerable.t(), pos_integer, pos_integer) :: Enumerable.t()
   def exec(stream, limit, seconds \\ 60),
