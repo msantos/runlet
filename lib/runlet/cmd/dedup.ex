@@ -4,9 +4,9 @@ defmodule Runlet.Cmd.Dedup do
   @doc """
   Suppress repeated events in a stream:
 
-    arg: "keys" "vals"
+      arg: "keys" "vals"
 
-    example: "host service" "description"
+      dedup "host service" "description"
   """
   @spec exec(Enumerable.t(), String.t(), String.t()) :: Enumerable.t()
   def exec(stream, key, val) do

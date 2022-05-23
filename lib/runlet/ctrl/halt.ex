@@ -12,7 +12,7 @@ defmodule Runlet.Ctrl.Halt do
   @doc """
   Requests the system to shut down after the specified number of seconds:
 
-    halt 10
+      halt 10
   """
   @spec exec(Runlet.t(), pos_integer) :: Enumerable.t()
   def exec(env, 0) do

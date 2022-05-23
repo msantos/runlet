@@ -13,11 +13,11 @@ defmodule Runlet.Ctrl.Flow do
   Alters the flow control for a running process or processes to count
   events in minutes:
 
-    # pid 1234: 10 events/2 minutes
-    args: 1234 10 2
+      # pid 1234: 10 events/2 minutes
+      flow 1234 10 2
 
-    # pids 1234, 2345, 123456
-    args: "1234 2345 12346" 10 2
+      # pids 1234, 2345, 123456
+      flow "1234 2345 12346" 10 2
   """
   @spec exec(Runlet.t(), Runlet.PID.t() | String.t(), pos_integer, pos_integer) ::
           Enumerable.t()
@@ -29,8 +29,8 @@ defmodule Runlet.Ctrl.Flow do
   Alters the flow control for several processes running as a different
   user to count events in minutes.
 
-    args: 1234 10 2 "nobody"
-    args: "1234 2345 12346" 10 2 "nobody"
+      flow 1234 10 2 "nobody"
+      flow "1234 2345 12346" 10 2 "nobody"
   """
   @spec exec(
           Runlet.t(),

@@ -25,8 +25,8 @@ defmodule Runlet.Ctrl.History do
   @doc """
   Run commands from history:
 
-    args: 10
-    args: "10 11 34"
+      h 10
+      h "10 11 34"
   """
   @spec exec(Runlet.t(), non_neg_integer | String.t()) :: Enumerable.t()
   def exec(%Runlet{} = env, index) when is_binary(index) do

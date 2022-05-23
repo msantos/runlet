@@ -4,8 +4,8 @@ defmodule Runlet.Ctrl.HistoryDelete do
   @doc """
   Deletes items from the history:
 
-    args: 4
-    args: "1 2 4 6"
+      hd 4
+      hd "1 2 4 6"
   """
   @spec exec(Runlet.t(), String.t() | integer) :: Enumerable.t()
   def exec(%Runlet{uid: uid}, index) when is_binary(index) do

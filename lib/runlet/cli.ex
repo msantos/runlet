@@ -17,8 +17,8 @@ defmodule Runlet.CLI do
     code
   end
 
-  @doc ~S"""
-  Compile a runlet expression into the AST
+  @doc """
+  Compile a runlet expression to AST.
 
   Commands are looked up in the application environment:
 
@@ -29,8 +29,8 @@ defmodule Runlet.CLI do
     compile!(pipeline, aliases())
   end
 
-  @doc ~S"""
-  Compile a runlet expression into Elixr AST
+  @doc """
+  Compile a runlet expression to AST.
 
   ## Examples
 
@@ -58,7 +58,7 @@ defmodule Runlet.CLI do
     end
   end
 
-  @doc ~S"""
+  @doc """
   Compile a runlet expression to AST
 
   Commands are looked up in the application environment:
@@ -70,7 +70,7 @@ defmodule Runlet.CLI do
     compile(pipeline, aliases())
   end
 
-  @doc ~S"""
+  @doc """
   Compile a runlet expression to AST
 
   ## Examples
@@ -160,13 +160,32 @@ defmodule Runlet.CLI do
     {{:., [], [{:__aliases__, [alias: false], mod}, fun]}, [], arg}
   end
 
+  @doc """
+  Tokenize a runlet expression.
+
+  ## Examples
+
+      iex> Runlet.CLI.lex(~s(test "foo" | bar 123 | out > 456))
+      {:ok,
+         [
+           {:command, 1, "test"},
+           {:string, 1, 'foo'},
+           {:|, 1},
+           {:command, 1, "bar"},
+           {:integer, 1, 123},
+           {:|, 1},
+           {:command, 1, "out"},
+           {:>, 1},
+           {:integer, 1, 456}
+         ], 1}
+  """
   def lex(command) do
     command
     |> String.to_charlist()
     |> :runlet_lexer.string()
   end
 
-  @doc ~S"""
+  @doc """
   Parse a runlet expression.
 
   ## Examples
@@ -198,7 +217,7 @@ defmodule Runlet.CLI do
 
   def parse(command) when is_list(command), do: {:ok, command}
 
-  @doc ~S"""
+  @doc """
   Insert a runlet pipeline into another pipeline.
 
   ## Examples
@@ -222,7 +241,7 @@ defmodule Runlet.CLI do
     end
   end
 
-  @doc ~S"""
+  @doc """
   Add a runlet expression at the start of a pipeline.
 
   ## Examples
@@ -236,7 +255,7 @@ defmodule Runlet.CLI do
   @spec prepend(e, e) :: {:ok, [t]} | {:error, String.t()}
   def prepend(code, command), do: insert(code, command, 0)
 
-  @doc ~S"""
+  @doc """
   Add a runlet expression to the end of a pipeline.
 
   ## Examples

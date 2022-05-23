@@ -2,7 +2,7 @@ defmodule Runlet.Cmd.Stdin do
   @moduledoc "Sends output from a pipeline to another process"
 
   @doc """
-  Sends output from a pipeline to another process
+  Sends output from a pipeline to another process.
   """
   @spec exec(Enumerable.t(), Runlet.PID.t()) :: Enumerable.t()
   def exec(stream, pid) do

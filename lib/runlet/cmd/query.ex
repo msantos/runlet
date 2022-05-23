@@ -49,33 +49,33 @@ defmodule Runlet.Cmd.Query do
   Filters events from a riemann server using the Riemann query
   language. The query must be quoted as a string:
 
-    'state = "ok"'
+      'state = "ok"'
 
   Examples of Queries:
 
-    # Simple equality
-    state = "ok"
+      # Simple equality
+      state = "ok"
 
-    # Wildcards
-    (service =~ "disk%") or
-    (state != "critical" and host =~ "%.trioptimum.com")
+      # Wildcards
+      (service =~ "disk%") or
+      (state != "critical" and host =~ "%.trioptimum.com")
 
-    # Standard operator precedence applies
-    metric_f > 2.0 and not host = nil
+      # Standard operator precedence applies
+      metric_f > 2.0 and not host = nil
 
-    # Anything with a tag "product"
-    tagged "product"
+      # Anything with a tag "product"
+      tagged "product"
 
-    # All states
-    true
+      # All states
+      true
 
   Examples from the test suite:
 
-    https://github.com/riemann/riemann/blob/master/test/riemann/query_test.clj
+  https://github.com/riemann/riemann/blob/master/test/riemann/query_test.clj
 
   Query Grammar:
 
-    https://github.com/riemann/riemann/blob/master/resources/query.g4
+  https://github.com/riemann/riemann/blob/master/resources/query.g4
   """
   @spec exec(String.t()) :: Enumerable.t()
   def exec(q) do

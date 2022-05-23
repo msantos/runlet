@@ -1,7 +1,7 @@
 defmodule Runlet.Ctrl.Help do
-  @moduledoc "provide help for a command"
+  @moduledoc "Provide help for a command"
 
-  @doc "provide command summaries"
+  @doc "Provide command summaries."
   def exec(%Runlet{aliases: aliases}) do
     #  {"query",
     #  [{[:Runlet, :Cmd, :Query], :exec}, {{[:Runlet, :Cmd, :Valve], :exec}, []},
@@ -42,7 +42,7 @@ defmodule Runlet.Ctrl.Help do
     end
   end
 
-  @doc "provide help for command"
+  @doc "Provide help for command."
   def exec(%Runlet{aliases: aliases} = env, cmd) do
     ast =
       aliases

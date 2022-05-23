@@ -18,7 +18,7 @@ defmodule Runlet.Cmd.Suppress do
 
   Args:
 
-    suppress <seconds>
+      suppress <seconds>
   """
   @spec exec(Enumerable.t(), pos_integer) :: Enumerable.t()
   def exec(stream, seconds) when seconds > 0 do
