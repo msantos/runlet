@@ -38,7 +38,6 @@ defmodule Runlet.Mixfile do
 
   defp deps do
     [
-      {:ex_rated, "~> 2.0"},
       {:gun, "~> 1.3"},
       {:poison, "~> 5.0"},
       {:vex, "~> 0.9.0"},

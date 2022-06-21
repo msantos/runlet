@@ -15,11 +15,6 @@ defmodule RunletLimitTest do
       |> Runlet.Cmd.Limit.exec(1, 60)
       |> Enum.take(2)
 
-    # 0 seconds: 1 event
-    # 2 seconds: 1 event
-    # 4 seconds: 1 event
-    # +/- 4 seconds
-
     assert [
              %Runlet.Event{
                attr: %{},

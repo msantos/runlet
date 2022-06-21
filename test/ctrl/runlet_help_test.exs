@@ -103,7 +103,7 @@ defmodule RunletCtrlHelpTest do
         %Runlet.Event{
           event: %Runlet.Event.Ctrl{
             description:
-              <<"usage: defopt: <count> <seconds \\\\ 60>", _::binary>>
+              <<"usage: defopt: <limit> <seconds \\\\ 60>", _::binary>>
           }
         }
       ] = Runlet.Ctrl.Help.exec(env, "defopt")

@@ -1,52 +1,55 @@
 defmodule Runlet.Cmd.Threshold do
   @moduledoc "Passes events over a minimum limit"
 
+  defstruct count: 0,
+            ts: 0,
+            buf: []
+
   @doc """
   Events below the threshold are suppressed. If the number of events in
   *seconds* seconds exceeds the threshold, all events, including events
   that were suppressed, are passed.
   """
   @spec exec(Enumerable.t(), pos_integer, pos_integer) :: Enumerable.t()
-  def exec(stream, count, seconds \\ 60),
-    do: exec(stream, count, seconds, inspect(:erlang.make_ref()))
-
-  @doc false
-  @spec exec(Enumerable.t(), pos_integer, pos_integer, String.t()) ::
-          Enumerable.t()
-  def exec(stream, count, seconds, name) when count > 0 and seconds > 0 do
+  def exec(stream, limit, seconds \\ 60) when limit > 0 and seconds > 0 do
     milliseconds = seconds * 1_000
 
     Stream.transform(
       stream,
-      fn -> [] end,
+      fn ->
+        %Runlet.Cmd.Threshold{ts: System.monotonic_time(:millisecond)}
+      end,
       fn
-        %Runlet.Event{event: %Runlet.Event.Signal{}} = t, buf ->
-          {[t], buf}
+        %Runlet.Event{event: %Runlet.Event.Signal{}} = t, state ->
+          {[t], state}
 
-        t, buf ->
-          ts = now()
-          event = {ts, t}
+        t, %Runlet.Cmd.Threshold{count: count, buf: buf} = state
+        when count < limit ->
+          ms = System.monotonic_time(:millisecond)
+          event = {ms, t}
+          {[], %{state | buf: filter(ms, milliseconds, [event | buf])}}
 
-          case ExRated.check_rate(name, milliseconds, count) do
-            {:ok, _} ->
-              {[], filter(ts, seconds, [event | buf])}
+        t, %Runlet.Cmd.Threshold{ts: ts, buf: buf} = state ->
+          ms = System.monotonic_time(:millisecond)
+          event = {ms, t}
 
-            {:error, _} ->
-              {to_list([event | buf]), []}
+          case ms - ts < milliseconds do
+            true ->
+              {to_list([event | buf]), %{state | ts: ms, count: 0, buf: []}}
+
+            false ->
+              {[], %{state | buf: [event]}}
           end
       end,
       fn _ ->
-        ExRated.delete_bucket(name)
+        :ok
       end
     )
   end
 
-  @spec now() :: pos_integer
-  defp now(), do: :erlang.system_time(:seconds)
-
-  defp filter(ts, expiry, buf) do
+  defp filter(ms, expiry, buf) do
     Enum.filter(buf, fn
-      {ts0, _} when ts - ts0 < expiry -> true
+      {ms0, _} when ms - ms0 < expiry -> true
       _ -> false
     end)
   end

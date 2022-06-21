@@ -1,34 +1,34 @@
 defmodule Runlet.Cmd.Limit do
   @moduledoc "Limit events to count per seconds"
 
+  defstruct count: 0,
+            ts: 0
+
   @doc """
   Set upper limit on the number of events permitted per *seconds*
   seconds. Events exceeding this rate are discarded.
   """
   @spec exec(Enumerable.t(), pos_integer, pos_integer) :: Enumerable.t()
-  def exec(stream, count, seconds \\ 60) do
-    exec(stream, count, seconds, inspect(:erlang.make_ref()))
-  end
-
-  @doc false
-  @spec exec(Enumerable.t(), pos_integer, pos_integer, String.t()) ::
-          Enumerable.t()
-  def exec(stream, limit, seconds, name) when limit > 0 and seconds > 0 do
+  def exec(stream, limit, seconds \\ 60) when limit > 0 and seconds > 0 do
     milliseconds = seconds * 1_000
 
     Stream.transform(
       stream,
-      fn -> true end,
+      fn ->
+        %Runlet.Cmd.Limit{ts: System.monotonic_time(:millisecond)}
+      end,
       fn
-        %Runlet.Event{event: %Runlet.Event.Signal{}} = t, alert ->
-          {[t], alert}
+        %Runlet.Event{event: %Runlet.Event.Signal{}} = t, state ->
+          {[t], state}
 
-        t, alert ->
-          case {ExRated.check_rate(name, milliseconds, limit), alert} do
-            {{:ok, _}, _} ->
-              {[t], true}
+        t, %Runlet.Cmd.Limit{count: count} = state when count < limit ->
+          {[t], %{state | count: count + 1}}
 
-            {{:error, _}, true} ->
+        t, %Runlet.Cmd.Limit{ts: ts} = state ->
+          now = System.monotonic_time(:millisecond)
+
+          case now - ts < milliseconds do
+            true ->
               {[
                  %Runlet.Event{
                    event: %Runlet.Event.Ctrl{
@@ -39,14 +39,14 @@ defmodule Runlet.Cmd.Limit do
                    },
                    query: "limit #{limit} #{seconds}"
                  }
-               ], false}
+               ], state}
 
-            {{:error, _}, false} ->
-              {[], false}
+            false ->
+              {[t], %{state | ts: now, count: 0}}
           end
       end,
       fn _ ->
-        ExRated.delete_bucket(name)
+        :ok
       end
     )
   end
