@@ -6,7 +6,7 @@ defmodule Runlet.History do
   @doc ~S"""
   Return the history for a user corresponding to a number or a list of numbers.
   """
-  @spec lookup(binary, integer | [integer]) :: nil | t
+  @spec lookup(binary, integer | [integer]) :: nil | t | [t]
   def lookup(user, index) when is_integer(index) do
     h = Runlet.State.table("history", user)
     Enum.at(h, index)
@@ -32,7 +32,7 @@ defmodule Runlet.History do
   # XXX race condition
   def delete(user, index) when is_integer(index) do
     case lookup(user, index) do
-      nil -> nil
+      nil -> :ok
       {k, _} -> Runlet.State.delete("history", user, k)
     end
   end

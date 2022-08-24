@@ -15,7 +15,7 @@ defmodule Runlet do
           pipeline: binary,
           stdout: (String.t() -> (Runlet.Event.t() | String.t() -> any)) | nil,
           aliases: Runlet.CLI.t() | nil,
-          append: binary | Runlet.CLI.t(),
+          append: nil | binary | Runlet.CLI.t(),
           state: any
         }
 

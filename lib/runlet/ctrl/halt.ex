@@ -14,7 +14,7 @@ defmodule Runlet.Ctrl.Halt do
 
       halt 10
   """
-  @spec exec(Runlet.t(), pos_integer) :: Enumerable.t()
+  @spec exec(Runlet.t(), non_neg_integer) :: Enumerable.t()
   def exec(env, 0) do
     exec(env, 1)
   end

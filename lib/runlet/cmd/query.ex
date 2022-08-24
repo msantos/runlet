@@ -182,7 +182,7 @@ defmodule Runlet.Cmd.Query do
           {[
              %Runlet.Event{
                query: q,
-               event: %Runlet.Event.Signal{description: "SIGHUP: reconnecting"}
+               event: %Runlet.Event.Signal{description: "SIGHUP"}
              }
            ], t}
 
