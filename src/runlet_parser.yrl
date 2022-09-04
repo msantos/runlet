@@ -14,6 +14,8 @@ Rootsymbol pipeline.
 
 pipeline    -> filter '|' pipeline : ['$1'] ++ '$3'.
 pipeline    -> filter '>' integer : ['$1'] ++ [{<<">">>, [unwrap('$3')]}].
+pipeline    -> filter '>' string : ['$1'] ++ [{<<">">>, [unwrap('$3')]}].
+pipeline    -> filter '>' command : ['$1'] ++ [{<<">">>, [unwrap('$3')]}].
 pipeline    -> filter : ['$1'].
 
 filter      -> command integer integer integer : {unwrap('$1'), [unwrap('$2'), unwrap('$3'), unwrap('$4')]}.

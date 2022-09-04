@@ -47,6 +47,16 @@ config :runlet,
     {"threshold", {[:Runlet, :Cmd, :Threshold], :exec}},
     {"timeout", {[:Runlet, :Cmd, :Timeout], :exec}},
     {"valve", {[:Runlet, :Cmd, :Valve], :exec}},
+    {"fifo",
+     [
+       {[:Runlet, :Cmd, :Fifo], :exec},
+       {{[:Runlet, :Cmd, :Valve], :exec}, []},
+       {{[:Runlet, :Cmd, :Flow], :exec}, [20, 100]}
+     ]},
+    {~S(\fifo),
+     [
+       {[:Runlet, :Cmd, :Fifo], :exec}
+     ]},
     {">", {[:Runlet, :Cmd, :Stdin], :exec}}
   ],
   riemann_event: [
