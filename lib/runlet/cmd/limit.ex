@@ -2,7 +2,8 @@ defmodule Runlet.Cmd.Limit do
   @moduledoc "Limit events to count per seconds"
 
   defstruct count: 0,
-            ts: 0
+            ts: 0,
+            limited: false
 
   @doc """
   Set upper limit on the number of events permitted per *seconds*
@@ -24,11 +25,11 @@ defmodule Runlet.Cmd.Limit do
         t, %Runlet.Cmd.Limit{count: count} = state when count < limit ->
           {[t], %{state | count: count + 1}}
 
-        t, %Runlet.Cmd.Limit{ts: ts} = state ->
+        t, %Runlet.Cmd.Limit{ts: ts, limited: limited} = state ->
           now = System.monotonic_time(:millisecond)
 
-          case now - ts < milliseconds do
-            true ->
+          case {now - ts < milliseconds, limited} do
+            {true, false} ->
               {[
                  %Runlet.Event{
                    event: %Runlet.Event.Ctrl{
@@ -39,10 +40,13 @@ defmodule Runlet.Cmd.Limit do
                    },
                    query: "limit #{limit} #{seconds}"
                  }
-               ], state}
+               ], %{state | limited: true}}
 
-            false ->
-              {[t], %{state | ts: now, count: 0}}
+            {true, _} ->
+              {[], state}
+
+            {false, _} ->
+              {[t], %{state | ts: now, count: 0, limited: false}}
           end
       end,
       fn _ ->
