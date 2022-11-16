@@ -46,7 +46,7 @@ defmodule Runlet.Cmd.Limit do
               {[], state}
 
             {false, _} ->
-              {[t], %{state | ts: now, count: 0, limited: false}}
+              {[t], %{state | ts: now, count: 1, limited: false}}
           end
       end,
       fn _ ->
