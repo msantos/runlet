@@ -22,13 +22,13 @@ defmodule Runlet.Cmd.Limit do
         %Runlet.Event{event: %Runlet.Event.Signal{}} = t, state ->
           {[t], state}
 
-        t, %Runlet.Cmd.Limit{count: count} = state when count < limit ->
-          {[t], %{state | count: count + 1}}
-
-        t, %Runlet.Cmd.Limit{ts: ts, limited: limited} = state ->
+        t, %Runlet.Cmd.Limit{ts: ts, count: count, limited: false} = state ->
           now = System.monotonic_time(:millisecond)
 
-          case {now - ts < milliseconds, limited} do
+          case {now - ts < milliseconds, count < limit} do
+            {true, true} ->
+              {[t], %{state | count: count + 1}}
+
             {true, false} ->
               {[
                  %Runlet.Event{
@@ -42,10 +42,18 @@ defmodule Runlet.Cmd.Limit do
                  }
                ], %{state | limited: true}}
 
-            {true, _} ->
+            {false, _} ->
+              {[t], %{state | ts: now, count: 1}}
+          end
+
+        t, %Runlet.Cmd.Limit{ts: ts, limited: true} = state ->
+          now = System.monotonic_time(:millisecond)
+
+          case now - ts < milliseconds do
+            true ->
               {[], state}
 
-            {false, _} ->
+            false ->
               {[t], %{state | ts: now, count: 1, limited: false}}
           end
       end,
