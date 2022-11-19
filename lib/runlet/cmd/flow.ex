@@ -2,7 +2,7 @@ defmodule Runlet.Cmd.Flow do
   @moduledoc "Flow control events"
 
   defstruct count: 1000,
-            milliseconds: 10_000,
+            seconds: 10,
             events: 0,
             dropped: 0,
             rate: 0,
@@ -18,10 +18,10 @@ defmodule Runlet.Cmd.Flow do
       stream,
       fn ->
         %Runlet.Cmd.Flow{
-          ts: System.monotonic_time(:millisecond),
+          ts: System.monotonic_time(:second),
           count: flow_count,
           rate: flow_count,
-          milliseconds: flow_seconds * 1_000
+          seconds: flow_seconds
         }
       end,
       fn
@@ -32,25 +32,25 @@ defmodule Runlet.Cmd.Flow do
         %Runlet.Cmd.Flow{
           ts: ts,
           count: count,
-          milliseconds: milliseconds,
+          seconds: seconds,
           events: events,
           rate: rate,
           dropped: dropped
         } = state ->
-          {ncount, nmilliseconds} = get_rate_limit(count, milliseconds)
+          {ncount, nseconds} = get_rate_limit(count, seconds)
 
-          now = System.monotonic_time(:millisecond)
+          now = System.monotonic_time(:second)
 
           rate = rate - (count - ncount)
 
-          case {rate, now - ts < nmilliseconds} do
+          case {rate, now - ts < nseconds} do
             {n, true} when n < 1 ->
               # rate limit exceeded: drop events
               {[],
                %{
                  state
                  | count: ncount,
-                   milliseconds: nmilliseconds,
+                   seconds: nseconds,
                    events: events + 1,
                    dropped: dropped + 1
                }}
@@ -74,7 +74,7 @@ defmodule Runlet.Cmd.Flow do
                  state
                  | ts: now,
                    count: ncount,
-                   milliseconds: nmilliseconds,
+                   seconds: nseconds,
                    events: events + 1,
                    rate: ncount - 1
                }}
@@ -97,7 +97,7 @@ defmodule Runlet.Cmd.Flow do
                %{
                  state
                  | count: ncount,
-                   milliseconds: nmilliseconds,
+                   seconds: nseconds,
                    events: events + 1,
                    rate: rate - 1
                }}
@@ -109,18 +109,18 @@ defmodule Runlet.Cmd.Flow do
     )
   end
 
-  defp get_rate_limit(count0, milliseconds0) do
+  defp get_rate_limit(count0, seconds0) do
     receive do
       {:runlet_limit, count, seconds}
       when is_integer(count) and is_integer(seconds) and count > 0 and
              seconds > 0 ->
-        {count, seconds * 1_000}
+        {count, seconds}
 
       {:runlet_limit, _, _} ->
-        {count0, milliseconds0}
+        {count0, seconds0}
     after
       0 ->
-        {count0, milliseconds0}
+        {count0, seconds0}
     end
   end
 end

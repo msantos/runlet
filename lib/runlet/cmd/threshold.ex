@@ -12,12 +12,10 @@ defmodule Runlet.Cmd.Threshold do
   """
   @spec exec(Enumerable.t(), pos_integer, pos_integer) :: Enumerable.t()
   def exec(stream, limit, seconds \\ 60) when limit > 0 and seconds > 0 do
-    milliseconds = seconds * 1_000
-
     Stream.transform(
       stream,
       fn ->
-        %Runlet.Cmd.Threshold{ts: System.monotonic_time(:millisecond)}
+        %Runlet.Cmd.Threshold{ts: System.monotonic_time(:second)}
       end,
       fn
         %Runlet.Event{event: %Runlet.Event.Signal{}} = t, state ->
@@ -25,15 +23,15 @@ defmodule Runlet.Cmd.Threshold do
 
         t, %Runlet.Cmd.Threshold{count: count, buf: buf} = state
         when count < limit ->
-          ms = System.monotonic_time(:millisecond)
+          ms = System.monotonic_time(:second)
           event = {ms, t}
-          {[], %{state | buf: filter(ms, milliseconds, [event | buf])}}
+          {[], %{state | buf: filter(ms, seconds, [event | buf])}}
 
         t, %Runlet.Cmd.Threshold{ts: ts, buf: buf} = state ->
-          ms = System.monotonic_time(:millisecond)
+          ms = System.monotonic_time(:second)
           event = {ms, t}
 
-          case ms - ts < milliseconds do
+          case ms - ts < seconds do
             true ->
               {to_list([event | buf]), %{state | ts: ms, count: 0, buf: []}}
 
