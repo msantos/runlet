@@ -16,7 +16,7 @@ defmodule Runlet.Cmd.Abort do
     Stream.transform(
       stream,
       fn ->
-        %Runlet.Cmd.Abort{ts: System.monotonic_time(:second), count: 0}
+        %Runlet.Cmd.Abort{ts: System.monotonic_time(:second)}
       end,
       fn
         %Runlet.Event{event: %Runlet.Event.Signal{}} = t, state ->
@@ -33,7 +33,7 @@ defmodule Runlet.Cmd.Abort do
               {:halt, state}
 
             false ->
-              {[t], %{state | ts: now, count: 0}}
+              {[t], %{state | ts: now, count: 1}}
           end
       end,
       fn _ ->

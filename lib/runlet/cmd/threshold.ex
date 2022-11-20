@@ -33,7 +33,7 @@ defmodule Runlet.Cmd.Threshold do
 
           case ms - ts < seconds do
             true ->
-              {to_list([event | buf]), %{state | ts: ms, count: 0, buf: []}}
+              {to_list([event | buf]), %{state | ts: ms, count: 1, buf: []}}
 
             false ->
               {[], %{state | buf: [event]}}
