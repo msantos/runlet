@@ -22,17 +22,17 @@ defmodule Runlet.Cmd.Abort do
         %Runlet.Event{event: %Runlet.Event.Signal{}} = t, state ->
           {[t], state}
 
-        t, %Runlet.Cmd.Abort{count: count} = state when count < limit ->
-          {[t], %{state | count: count + 1}}
-
-        t, %Runlet.Cmd.Abort{ts: ts} = state ->
+        t, %Runlet.Cmd.Abort{ts: ts, count: count} = state ->
           now = System.monotonic_time(:second)
 
-          case now - ts < seconds do
-            true ->
+          case {now - ts < seconds, count < limit} do
+            {true, true} ->
+              {[t], %{state | count: count + 1}}
+
+            {true, false} ->
               {:halt, state}
 
-            false ->
+            {false, _} ->
               {[t], %{state | ts: now, count: 1}}
           end
       end,
