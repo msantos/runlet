@@ -21,22 +21,24 @@ defmodule Runlet.Cmd.Threshold do
         %Runlet.Event{event: %Runlet.Event.Signal{}} = t, state ->
           {[t], state}
 
-        t, %Runlet.Cmd.Threshold{count: count, buf: buf} = state
-        when count < limit ->
-          ms = System.monotonic_time(:second)
-          event = {ms, t}
-          {[], %{state | buf: filter(ms, seconds, [event | buf])}}
+        t, %Runlet.Cmd.Threshold{ts: ts0, count: count, buf: buf} = state ->
+          ts = System.monotonic_time(:second)
+          event = {ts, t}
 
-        t, %Runlet.Cmd.Threshold{ts: ts, buf: buf} = state ->
-          ms = System.monotonic_time(:second)
-          event = {ms, t}
+          case {ts - ts0 < seconds, count < limit} do
+            {true, true} ->
+              {[],
+               %{
+                 state
+                 | buf: filter(ts, seconds, [event | buf]),
+                   count: count + 1
+               }}
 
-          case ms - ts < seconds do
-            true ->
-              {to_list([event | buf]), %{state | ts: ms, count: 1, buf: []}}
+            {true, false} ->
+              {to_list([event | buf]), %{state | ts: ts, count: 1, buf: []}}
 
-            false ->
-              {[], %{state | buf: [event]}}
+            {false, _} ->
+              {[], %{state | buf: [event], count: 1}}
           end
       end,
       fn _ ->
@@ -45,9 +47,9 @@ defmodule Runlet.Cmd.Threshold do
     )
   end
 
-  defp filter(ms, expiry, buf) do
+  defp filter(ts, expiry, buf) do
     Enum.filter(buf, fn
-      {ms0, _} when ms - ms0 < expiry -> true
+      {ts0, _} when ts - ts0 < expiry -> true
       _ -> false
     end)
   end
