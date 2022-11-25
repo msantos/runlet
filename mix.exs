@@ -17,7 +17,6 @@ defmodule Runlet.Mixfile do
         flags: [
           :unmatched_returns,
           :error_handling,
-          :race_conditions,
           :underspecs
         ]
       ],
@@ -43,7 +42,8 @@ defmodule Runlet.Mixfile do
       {:vex, "~> 0.9.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.28", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.28", only: :dev, runtime: false},
+      {:gradient, github: "esl/gradient", only: [:dev], runtime: false}
     ]
   end
 
