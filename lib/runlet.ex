@@ -1,8 +1,6 @@
 defmodule Runlet do
   require Logger
 
-  @moduledoc false
-
   defstruct uid: "nobody",
             pipeline: "",
             stdout: nil,

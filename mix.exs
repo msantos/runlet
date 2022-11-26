@@ -1,14 +1,17 @@
 defmodule Runlet.Mixfile do
   use Mix.Project
 
+  @version "1.2.4"
+
   def project do
     [
       app: :runlet,
-      version: "1.2.3",
+      version: @version,
       elixir: "~> 1.9",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      docs: docs(),
       package: package(),
       description:
         "Job command language to query and flow control event streams",
@@ -22,17 +25,22 @@ defmodule Runlet.Mixfile do
       ],
       name: "runlet",
       source_url: "https://github.com/msantos/runlet",
-      homepage_url: "https://github.com/msantos/runlet",
-      docs: [
-        main: "readme",
-        source_ref: "master",
-        extras: ["README.md"]
-      ]
+      homepage_url: "https://github.com/msantos/runlet"
     ]
   end
 
   def application do
     [extra_applications: [:inets, :logger]]
+  end
+
+  defp docs do
+    [
+      source_ref: "v#{@version}",
+      extras: [
+        "README.md": [title: "Overview"]
+      ],
+      main: "readme"
+    ]
   end
 
   defp deps do
