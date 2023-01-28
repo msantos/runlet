@@ -1,5 +1,5 @@
 defmodule Runlet.CLI do
-  @moduledoc "Compile runlet expresions"
+  @moduledoc "Compile runlet expressions"
 
   @type t :: {[atom], atom} | {{[atom], atom}, [String.t() | integer]}
   @type e :: String.t() | [t]
