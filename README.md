@@ -1,5 +1,8 @@
 # Runlet
 
+[![Package Version](https://img.shields.io/hexpm/v/runlet)](https://hex.pm/packages/runlet)
+[![Hex Docs](https://img.shields.io/badge/hex-docs)](https://hexdocs.pm/runlet/)
+
 A job command language for querying and enforcing flow control on
 event streams. `runlet` is a library used for event notifications in
 monitoring systems.
