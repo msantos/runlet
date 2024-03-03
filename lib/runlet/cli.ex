@@ -4,6 +4,7 @@ defmodule Runlet.CLI do
   @type t :: {[atom], atom} | {{[atom], atom}, [String.t() | integer]}
   @type e :: String.t() | [t]
 
+  @doc false
   @spec aliases() :: [t]
   def aliases(), do: Runlet.Config.get(:runlet, :aliases, [])
 
@@ -99,6 +100,7 @@ defmodule Runlet.CLI do
     end
   end
 
+  @doc false
   def ast(pipeline, commands) do
     fun = fn {cmd, arg} ->
       maybe_argv = fn
@@ -126,12 +128,14 @@ defmodule Runlet.CLI do
     end
   end
 
+  @doc false
   def pipe(code) do
     Enum.reduce(code, fn term, acc ->
       {:|>, [context: Elixir, import: Kernel], [acc, term]}
     end)
   end
 
+  @doc false
   @spec expand([t], fun) :: {:ok, [t]} | {:error, String.t()}
   def expand(pipeline, fun) do
     with {:ok, cmds} <- substitute(pipeline, fun) do
@@ -139,6 +143,7 @@ defmodule Runlet.CLI do
     end
   end
 
+  @doc false
   @spec substitute([t], fun) :: {:ok, [t]} | {:error, String.t()}
   def substitute(cmds, fun), do: substitute(cmds, fun, [])
 
@@ -156,6 +161,7 @@ defmodule Runlet.CLI do
     end
   end
 
+  @doc false
   def to_ast({{mod, fun}, arg}) do
     {{:., [], [{:__aliases__, [alias: false], mod}, fun]}, [], arg}
   end
