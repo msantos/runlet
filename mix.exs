@@ -25,7 +25,8 @@ defmodule Runlet.Mixfile do
       ],
       name: "runlet",
       source_url: "https://github.com/msantos/runlet",
-      homepage_url: "https://github.com/msantos/runlet"
+      homepage_url: "https://github.com/msantos/runlet",
+      compilers: [:yecc, :leex] ++ Mix.compilers()
     ]
   end
 
