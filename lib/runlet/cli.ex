@@ -8,11 +8,16 @@ defmodule Runlet.CLI do
   @spec aliases() :: [t]
   def aliases(), do: Runlet.Config.get(:runlet, :aliases, [])
 
+  @doc false
   def exec(ast), do: exec!(ast, [])
+
+  @doc false
   def exec(ast, bind), do: exec!(ast, bind)
 
+  @doc false
   def exec!(ast), do: exec!(ast, [])
 
+  @doc false
   def exec!(ast, bind) do
     {code, _} = Code.eval_quoted(ast, bind, __ENV__)
     code
