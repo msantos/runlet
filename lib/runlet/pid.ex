@@ -61,7 +61,7 @@ defmodule Runlet.PID do
   """
   @spec to_pid(Runlet.PID.t() | pid | String.t() | charlist()) :: pid
   def to_pid(x) when is_pid(x), do: x
-  def to_pid(x) when is_integer(x), do: :erlang.list_to_pid('<0.#{x}.0>')
+  def to_pid(x) when is_integer(x), do: :erlang.list_to_pid(~c"<0.#{x}.0>")
 
   def to_pid(x) when is_float(x) do
     [num, serial] =
@@ -69,7 +69,7 @@ defmodule Runlet.PID do
       |> Float.to_string()
       |> String.split(".")
 
-    :erlang.list_to_pid('<0.#{num}.#{serial}>')
+    :erlang.list_to_pid(~c"<0.#{num}.#{serial}>")
   end
 
   def to_pid(x) when is_binary(x) do

@@ -3,7 +3,8 @@ defmodule RunletCLITest do
   doctest Runlet.CLI
 
   test "parser: string used as command" do
-    assert {:ok, [{:string, 1, 'a string'}], 1} = Runlet.CLI.lex("\"a string\"")
+    assert {:ok, [{:string, 1, ~c"a string"}], 1} =
+             Runlet.CLI.lex("\"a string\"")
 
     assert {:error, "syntax error before: \"a string\""} =
              Runlet.CLI.parse("\"a string\"")
