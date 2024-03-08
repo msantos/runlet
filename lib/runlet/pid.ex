@@ -1,8 +1,6 @@
 defmodule Runlet.PID do
   @moduledoc "Conversion functions between Runlet and Erlang PIDs"
 
-  use Bitwise
-
   @type t :: integer | float
 
   @doc ~S"""
