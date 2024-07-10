@@ -1,7 +1,7 @@
 defmodule Runlet.Mixfile do
   use Mix.Project
 
-  @version "1.2.5"
+  @version "1.2.6"
 
   def project do
     [
@@ -46,7 +46,7 @@ defmodule Runlet.Mixfile do
 
   defp deps do
     [
-      {:gun, "~> 1.3"},
+      {:gun, "~> 2.1"},
       {:poison, "~> 5.0"},
       {:vex, "~> 0.9.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
