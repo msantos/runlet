@@ -47,7 +47,7 @@ defmodule Runlet.Mixfile do
   defp deps do
     [
       {:gun, "~> 2.1"},
-      {:poison, "~> 5.0"},
+      {:poison, "~> 6.0"},
       {:vex, "~> 0.9.0"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
