@@ -8,9 +8,9 @@ defmodule Runlet.PID do
 
   ## Examples:
 
-      iex> Runlet.PID.to_string(:erlang.list_to_pid('<0.1234.0>'))
+      iex> Runlet.PID.to_string(:erlang.list_to_pid(~c"<0.1234.0>"))
       "1234"
-      iex> Runlet.PID.to_string(:erlang.list_to_pid('<0.1234.56>'))
+      iex> Runlet.PID.to_string(:erlang.list_to_pid(~c"<0.1234.56>"))
       "1234.56"
 
   """
@@ -32,9 +32,9 @@ defmodule Runlet.PID do
 
   ## Examples:
 
-      iex> Runlet.PID.to_float(:erlang.list_to_pid('<0.1234.0>'))
+      iex> Runlet.PID.to_float(:erlang.list_to_pid(~c"<0.1234.0>"))
       1234.0
-      iex> Runlet.PID.to_float(:erlang.list_to_pid('<0.1234.56>'))
+      iex> Runlet.PID.to_float(:erlang.list_to_pid(~c"<0.1234.56>"))
       1234.56
 
   """
@@ -53,7 +53,7 @@ defmodule Runlet.PID do
 
   ## Examples:
 
-      iex> Runlet.PID.to_pid(String.to_integer(Runlet.PID.to_string(:erlang.list_to_pid('<0.1234.0>'))))
+      iex> Runlet.PID.to_pid(String.to_integer(Runlet.PID.to_string(:erlang.list_to_pid(~c"<0.1234.0>"))))
       #PID<0.1234.0>
 
   """

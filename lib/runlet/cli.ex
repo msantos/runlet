@@ -53,7 +53,7 @@ defmodule Runlet.CLI do
             [{:__aliases__, [alias: false], {:Fake, :Cmd, :StaticArg}},
              ["static arg"]]}, [], ["foo"]}]},
         {{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :IntArg]}, :exec]},
-         [], '{'}]}
+         [], ~c"{"}]}
 
   """
   @spec compile!(e, [t]) :: [t]
@@ -95,7 +95,7 @@ defmodule Runlet.CLI do
              [{:__aliases__, [alias: false], {:Fake, :Cmd, :StaticArg}},
               ["static arg"]]}, [], ["foo"]}]},
          {{:., [], [{:__aliases__, [alias: false], [:Fake, :Cmd, :IntArg]}, :exec]},
-          [], '{'}]}}
+          [], ~c"{"}]}}
 
   """
   @spec compile(e, [t]) :: {:ok, [t]} | {:error, String.t()}
@@ -180,7 +180,7 @@ defmodule Runlet.CLI do
       {:ok,
          [
            {:command, 1, "test"},
-           {:string, 1, 'foo'},
+           {:string, 1, ~c"foo"},
            {:|, 1},
            {:command, 1, "bar"},
            {:integer, 1, 123},
@@ -202,7 +202,7 @@ defmodule Runlet.CLI do
   ## Examples
 
       iex> Runlet.CLI.parse(~s(test "foo" | bar 123 | out > 456))
-      {:ok, [{"test", ["foo"]}, {"bar", '{'}, {"out", []}, {">", [456]}]}
+      {:ok, [{"test", ["foo"]}, {"bar", ~c"{"}, {"out", []}, {">", [456]}]}
 
   """
   @spec parse(e) ::
@@ -236,7 +236,7 @@ defmodule Runlet.CLI do
       iex> Runlet.CLI.insert(~s(test "foo" | bar 123 | another),
       ...>   ~s(insert | here), 2)
       {:ok,
-       [{"test", ["foo"]}, {"bar", '{'}, {"insert", []}, {"here", []},
+       [{"test", ["foo"]}, {"bar", ~c"{"}, {"insert", []}, {"here", []},
         {"another", []}]}
 
   """
@@ -259,7 +259,7 @@ defmodule Runlet.CLI do
 
       iex> Runlet.CLI.prepend(~s(test "foo" | bar 123 | another), ~s(insert | here))
       {:ok,
-       [{"insert", []}, {"here", []}, {"test", ["foo"]}, {"bar", '{'},
+       [{"insert", []}, {"here", []}, {"test", ["foo"]}, {"bar", ~c"{"},
         {"another", []}]}
 
   """
@@ -273,7 +273,7 @@ defmodule Runlet.CLI do
 
       iex> Runlet.CLI.append(~s(test "foo" | bar 123 | another), ~s(insert | here))
       {:ok,
-       [{"test", ["foo"]}, {"bar", '{'}, {"another", []}, {"insert", []},
+       [{"test", ["foo"]}, {"bar", ~c"{"}, {"another", []}, {"insert", []},
         {"here", []}]}
 
   """
