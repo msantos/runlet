@@ -237,7 +237,7 @@ defmodule Runlet.Cmd.Query do
           {:error, error} ->
             Process.demonitor(m, [:flush])
             Logger.error(%{gun_await_up: error})
-            close(state)
+            close(%{state | conn: conn})
             open(state)
         end
 
